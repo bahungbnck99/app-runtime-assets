@@ -1,11 +1,11 @@
-﻿{
+{
     "schemaVersion":  1,
     "assetType":  "fonts",
     "version":  "2026.06.26",
     "channel":  "stable",
     "installMode":  "zip",
     "packUrl":  "https://raw.githubusercontent.com/bahungbnck99/app-runtime-assets/main/packs/fonts/fonts-pack-2026.06.26.zip",
-    "packSha256":  "d97313688bf8e490c9c352ed4962e353015596a167823b7410467aaa0be713a5",
+    "packSha256":  "8e427e1f786195cb5e0a74571e33b3979773b89e5045e7274473a797d5a5dfdf",
     "installDir":  "fonts",
     "apps":  [
                  "download-multi-platform",

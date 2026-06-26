@@ -19,8 +19,13 @@ $zipPath = Join-Path $packsDir "fonts-pack-$Version.zip"
 
 New-Item -ItemType Directory -Force -Path $sourceFontsDir, $packsDir, $manifestsDir, $checksumsDir | Out-Null
 
+function Write-Utf8NoBom([string]$Path, [string]$Content) {
+  $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+  [System.IO.File]::WriteAllText($Path, $Content, $utf8NoBom)
+}
+
 $fontFiles = Get-ChildItem -Path $sourceFontsDir -File -Recurse |
-  Where-Object { $_.Extension.ToLowerInvariant() -in @(".ttf", ".otf", ".ttc", ".woff", ".woff2") } |
+  Where-Object { $_.Extension.ToLowerInvariant() -in @(".ttf", ".otf", ".ttc", ".otc") } |
   Sort-Object FullName
 
 if ($fontFiles.Count -eq 0) {
@@ -130,7 +135,7 @@ $packJson = [ordered]@{
   version = $Version
   items = $packItems
 }
-$packJson | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $workDir "pack.json") -Encoding UTF8
+Write-Utf8NoBom -Path (Join-Path $workDir "pack.json") -Content ($packJson | ConvertTo-Json -Depth 10)
 
 if (Test-Path $zipPath) {
   Remove-Item -LiteralPath $zipPath -Force
@@ -152,7 +157,7 @@ $fontsManifest = [ordered]@{
   apps = @($metadata.defaults.apps)
   items = $items
 }
-$fontsManifest | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $manifestsDir "fonts.json") -Encoding UTF8
+Write-Utf8NoBom -Path (Join-Path $manifestsDir "fonts.json") -Content ($fontsManifest | ConvertTo-Json -Depth 10)
 
 $registry = [ordered]@{
   schemaVersion = 1
@@ -166,7 +171,7 @@ $registry = [ordered]@{
     }
   }
 }
-$registry | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $manifestsDir "registry.json") -Encoding UTF8
+Write-Utf8NoBom -Path (Join-Path $manifestsDir "registry.json") -Content ($registry | ConvertTo-Json -Depth 10)
 
 $checksumLine = "$zipSha256  packs/fonts/fonts-pack-$Version.zip"
 $existing = @()
@@ -174,7 +179,7 @@ $checksumPath = Join-Path $checksumsDir "SHA256SUMS.txt"
 if (Test-Path $checksumPath) {
   $existing = Get-Content -LiteralPath $checksumPath | Where-Object { $_ -and ($_ -notmatch "packs/fonts/fonts-pack-$Version\.zip$") }
 }
-@($existing + $checksumLine) | Set-Content -LiteralPath $checksumPath -Encoding UTF8
+Write-Utf8NoBom -Path $checksumPath -Content (@($existing + $checksumLine) -join [Environment]::NewLine)
 
 Write-Host "Updated runtime font pack:"
 Write-Host "  Version: $Version"
