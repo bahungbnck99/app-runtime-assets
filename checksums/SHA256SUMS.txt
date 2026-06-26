@@ -1,1 +1,1 @@
-211eb96f0369bd1c30e13d2d0a9daba2d433855333aea3a208b97f1f8cccd3d1  packs/fonts/fonts-pack-2026.06.26.zip
+6bda239a899da197ed1258bbd96c32aa8eeabeac14c119e29258b5884e9b5b2e  packs/fonts/fonts-pack-2026.06.26.zip
