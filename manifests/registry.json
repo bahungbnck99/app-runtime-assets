@@ -1,0 +1,14 @@
+﻿{
+    "schemaVersion":  1,
+    "updatedAt":  "2026-06-26T04:57:17Z",
+    "publisher":  "bahungbnck99",
+    "assets":  {
+                   "fonts":  {
+                                 "manifestUrl":  "https://raw.githubusercontent.com/bahungbnck99/app-runtime-assets/main/manifests/fonts.json",
+                                 "requiredBy":  [
+                                                    "download-multi-platform"
+                                                ],
+                                 "optional":  false
+                             }
+               }
+}

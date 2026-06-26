@@ -1,0 +1,1584 @@
+﻿{
+    "schemaVersion":  1,
+    "assetType":  "fonts",
+    "version":  "2026.06.26",
+    "channel":  "stable",
+    "installMode":  "zip",
+    "packUrl":  "https://raw.githubusercontent.com/bahungbnck99/app-runtime-assets/main/packs/fonts/fonts-pack-2026.06.26.zip",
+    "packSha256":  "d97313688bf8e490c9c352ed4962e353015596a167823b7410467aaa0be713a5",
+    "installDir":  "fonts",
+    "apps":  [
+                 "download-multi-platform",
+                 "*"
+             ],
+    "items":  [
+                  {
+                      "id":  "vhantiq",
+                      "family":  "VHANTIQ",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHANTIQ.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vharabia",
+                      "family":  "VHARABIA",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHARABIA.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhariabi",
+                      "family":  "VHARIABI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHARIABI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vharial",
+                      "family":  "VHARIAL",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHARIAL.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vharialb",
+                      "family":  "VHARIALB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHARIALB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhariali",
+                      "family":  "VHARIALI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHARIALI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vharialn",
+                      "family":  "VHARIALN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHARIALN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vharis",
+                      "family":  "VHARIS",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHARIS.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhavan",
+                      "family":  "VHAVAN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHAVAN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhavanb",
+                      "family":  "VHAVANB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHAVANB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhavanbi",
+                      "family":  "VHAVANBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHAVANBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhavani",
+                      "family":  "VHAVANI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHAVANI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhbahab",
+                      "family":  "VHBAHAB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHBAHAB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhblack",
+                      "family":  "VH",
+                      "weight":  900,
+                      "style":  "normal",
+                      "file":  "fonts/VHBLACK.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhbodo",
+                      "family":  "VHBODO",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHBODO.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhcentb",
+                      "family":  "VHCENTB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHCENTB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhcentbi",
+                      "family":  "VHCENTBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHCENTBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhcenti",
+                      "family":  "VHCENTI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHCENTI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhcentn",
+                      "family":  "VHCENTN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHCENTN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhclare",
+                      "family":  "VHCLARE",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHCLARE.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhcomsci",
+                      "family":  "VHCOMSCI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHCOMSCI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhcoop",
+                      "family":  "VHCOOP",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHCOOP.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhcorvi",
+                      "family":  "VHCORVI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHCORVI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhcour",
+                      "family":  "VHCOUR",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHCOUR.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhcourb",
+                      "family":  "VHCOURB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHCOURB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhelvcn",
+                      "family":  "VHELVCN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHELVCN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhelveb",
+                      "family":  "VHELVEB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHELVEB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhelvebi",
+                      "family":  "VHELVEBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHELVEBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhelvei",
+                      "family":  "VHELVEI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHELVEI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhelven",
+                      "family":  "VHELVEN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHELVEN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhexotic",
+                      "family":  "VHEXOTIC",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHEXOTIC.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhfree",
+                      "family":  "VHFREE",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHFREE.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhgoth",
+                      "family":  "VHGOTH",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHGOTH.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhhels",
+                      "family":  "VHHELS",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHHELS.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhkoala",
+                      "family":  "VHKOALA",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHKOALA.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhlincol",
+                      "family":  "VHLINCOL",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHLINCOL.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhlinus",
+                      "family":  "VHLINUS",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHLINUS.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhmemo",
+                      "family":  "VHMEMO",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHMEMO.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhmusti",
+                      "family":  "VHMUSTI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHMUSTI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhpark",
+                      "family":  "VHPARK",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHPARK.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhpres",
+                      "family":  "VHPRES",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHPRES.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhrevu",
+                      "family":  "VHREVU",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHREVU.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhsouth",
+                      "family":  "VHSOUTH",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHSOUTH.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhtekn",
+                      "family":  "VHTEKN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHTEKN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhtifh",
+                      "family":  "VHTIFH",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHTIFH.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhtime",
+                      "family":  "VHTIME",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHTIME.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhtimeb",
+                      "family":  "VHTIMEB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHTIMEB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhtimebi",
+                      "family":  "VHTIMEBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHTIMEBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhtimei",
+                      "family":  "VHTIMEI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHTIMEI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhuniv",
+                      "family":  "VHUNIV",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHUNIV.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vhvogu",
+                      "family":  "VHVOGU",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VHVOGU.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vkorini",
+                      "family":  "VKORINI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VKORINI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vkunb",
+                      "family":  "VKUNB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VKUNB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vkunbi",
+                      "family":  "VKUNBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VKUNBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vkunn",
+                      "family":  "VKUNN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VKUNN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vmelib",
+                      "family":  "VMELIB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VMELIB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vmelibi",
+                      "family":  "VMELIBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VMELIBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vmelii",
+                      "family":  "VMELII",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VMELII.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vmelin",
+                      "family":  "VMELIN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VMELIN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vmurrayb",
+                      "family":  "VMURRAYB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VMURRAYB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vmurrayn",
+                      "family":  "VMURRAYN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VMURRAYN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vn3d",
+                      "family":  "VN3D",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VN3D.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnantiq",
+                      "family":  "VNANTIQ",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNANTIQ.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnantiqb",
+                      "family":  "VNANTIQB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNANTIQB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnarabia",
+                      "family":  "VNARABIA",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNARABIA.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnariabi",
+                      "family":  "VNARIABI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNARIABI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnarial",
+                      "family":  "VNARIAL",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNARIAL.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnarialb",
+                      "family":  "VNARIALB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNARIALB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnariali",
+                      "family":  "VNARIALI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNARIALI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnarialn",
+                      "family":  "VNARIALN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNARIALN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnarianb",
+                      "family":  "VNARIANB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNARIANB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnariani",
+                      "family":  "VNARIANI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNARIANI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnaris",
+                      "family":  "VNARIS",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNARIS.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnavan",
+                      "family":  "VNAVAN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNAVAN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnavanb",
+                      "family":  "VNAVANB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNAVANB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnavanbi",
+                      "family":  "VNAVANBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNAVANBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnavani",
+                      "family":  "VNAVANI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNAVANI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnbahab",
+                      "family":  "VNBAHAB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNBAHAB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnblack",
+                      "family":  "VN",
+                      "weight":  900,
+                      "style":  "normal",
+                      "file":  "fonts/VNBLACK.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnbodo",
+                      "family":  "VNBODO",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNBODO.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncentb",
+                      "family":  "VNCENTB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCENTB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncentbi",
+                      "family":  "VNCENTBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCENTBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncenti",
+                      "family":  "VNCENTI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCENTI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncentn",
+                      "family":  "VNCENTN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCENTN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnclare",
+                      "family":  "VNCLARE",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCLARE.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncomsi",
+                      "family":  "VNCOMSI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCOMSI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncoop",
+                      "family":  "VNCOOP",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCOOP.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncorsi",
+                      "family":  "VNCORSI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCORSI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncour",
+                      "family":  "VNCOUR",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCOUR.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncour2",
+                      "family":  "VNCOUR2",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCOUR2.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncourb",
+                      "family":  "VNCOURB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCOURB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncourbi",
+                      "family":  "VNCOURBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCOURBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vncouri",
+                      "family":  "VNCOURI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNCOURI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnexotic",
+                      "family":  "VNEXOTIC",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNEXOTIC.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnfree",
+                      "family":  "VNFREE",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNFREE.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vngothic",
+                      "family":  "VNGOTHIC",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNGOTHIC.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnhelvs",
+                      "family":  "VNHELVS",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNHELVS.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnhltfap",
+                      "family":  "Vnhltfap",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/Vnhltfap.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-alex",
+                      "family":  "VNI Alex",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Alex.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-alexbrush",
+                      "family":  "VNI AlexBrush",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-AlexBrush.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-ambiancebtswash",
+                      "family":  "VNI AmbianceBTSwash",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-AmbianceBTSwash.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-annabelle",
+                      "family":  "VNI Annabelle",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Annabelle.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-baybuom",
+                      "family":  "VNI Baybuom",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Baybuom.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-bendigo",
+                      "family":  "VNI Bendigo",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Bendigo.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-briquet",
+                      "family":  "VNI Briquet",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Briquet.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-brushme",
+                      "family":  "VNI BrushMe",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-BrushMe.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-butlong",
+                      "family":  "VNI Butlong",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Butlong.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-chops-normal",
+                      "family":  "VNI Chops Normal",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Chops Normal.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-disney",
+                      "family":  "VNI Disney",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Disney.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-diudang",
+                      "family":  "VNI Diudang",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Diudang.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-helveb",
+                      "family":  "VNI HelveB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-HelveB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-helvebi",
+                      "family":  "VNI HelveBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-HelveBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-helvei",
+                      "family":  "VNI HelveI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-HelveI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-hobo",
+                      "family":  "VNI Hobo",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Hobo.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-jackieo",
+                      "family":  "VNI JackieO",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-JackieO.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-jamai",
+                      "family":  "VNI Jamai",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Jamai.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-korin",
+                      "family":  "VNI Korin",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Korin.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-korinb",
+                      "family":  "VNI KorinB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-KorinB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-linus",
+                      "family":  "VNI Linus",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Linus.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-lithos",
+                      "family":  "VNI Lithos",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Lithos.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-love",
+                      "family":  "VNI Love",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Love.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-machina",
+                      "family":  "VNI Machina",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Machina.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-mandalay",
+                      "family":  "VNI Mandalay",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Mandalay.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-maria",
+                      "family":  "VNI Maria",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Maria.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-matisse",
+                      "family":  "VNI Matisse",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Matisse.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-netbut",
+                      "family":  "VNI Netbut",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Netbut.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-nhatban",
+                      "family":  "VNI Nhatban",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Nhatban.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-ongdohl",
+                      "family":  "VNI OngdoHL",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-OngdoHL.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-qwigley",
+                      "family":  "VNI Qwigley",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Qwigley.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-saliere",
+                      "family":  "VNI Saliere",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Saliere.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-sandy",
+                      "family":  "VNI Sandy",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Sandy.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-scrap-cursive",
+                      "family":  "VNI Scrap Cursive",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Scrap Cursive.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-script",
+                      "family":  "VNI Script",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Script.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-shishonibrush",
+                      "family":  "VNI ShishoniBrush",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-ShishoniBrush.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-silver",
+                      "family":  "VNI Silver",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Silver.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-slogan",
+                      "family":  "VNI Slogan",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Slogan.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-souvir",
+                      "family":  "VNI Souvir",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Souvir.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-springtime",
+                      "family":  "VNI Springtime",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Springtime.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-thanhcao",
+                      "family":  "VNI Thanhcao",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Thanhcao.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-thufapfan",
+                      "family":  "VNI Thufapfan",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Thufapfan.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-thuphap",
+                      "family":  "VNI Thuphap",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Thuphap.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-thuphap1",
+                      "family":  "VNI Thuphap1",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Thuphap1.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-thuphap2",
+                      "family":  "VNI Thuphap2",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Thuphap2.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-thuphap3",
+                      "family":  "VNI Thuphap3",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Thuphap3.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-top",
+                      "family":  "VNI Top",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Top.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-truck",
+                      "family":  "VNI Truck",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Truck.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-trung-kien",
+                      "family":  "VNI Trung Kien",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Trung Kien.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-tubes",
+                      "family":  "VNI Tubes",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Tubes.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-univer",
+                      "family":  "VNI Univer",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Univer.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-university",
+                      "family":  "VNI University",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-University.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-viettay",
+                      "family":  "VNI Viettay",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Viettay.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-vivi",
+                      "family":  "VNI Vivi",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Vivi.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-walt-disney",
+                      "family":  "VNI Walt Disney",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Walt Disney.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-whimsy",
+                      "family":  "VNI Whimsy",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Whimsy.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-yahoo",
+                      "family":  "VNI Yahoo",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Yahoo.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-zap",
+                      "family":  "VNI Zap",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Zap.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vni-zirkon",
+                      "family":  "VNI Zirkon",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNI-Zirkon.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnkoala",
+                      "family":  "VNKOALA",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNKOALA.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnlincol",
+                      "family":  "VNLINCOL",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNLINCOL.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnlinus",
+                      "family":  "VNLINUS",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNLINUS.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnlucida",
+                      "family":  "VNLUCIDA",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNLUCIDA.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnmemo",
+                      "family":  "VNMEMO",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNMEMO.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnmusti",
+                      "family":  "VNMUSTI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNMUSTI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnpark",
+                      "family":  "VNPARK",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNPARK.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnpres",
+                      "family":  "VNPRES",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNPRES.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnrevu",
+                      "family":  "VNREVU",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNREVU.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnshell",
+                      "family":  "VNSHELL",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNSHELL.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnsouthb",
+                      "family":  "VNSOUTHB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNSOUTHB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnsouthd",
+                      "family":  "VNSOUTHD",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNSOUTHD.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnsouthi",
+                      "family":  "VNSOUTHI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNSOUTHI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnsouthn",
+                      "family":  "VNSOUTHN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNSOUTHN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnstamp",
+                      "family":  "VNSTAMP",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNSTAMP.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vntekn",
+                      "family":  "VNTEKN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNTEKN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vntfap01",
+                      "family":  "Vntfap01",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/Vntfap01.ttf",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnthfap2",
+                      "family":  "Vnthfap2",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/Vnthfap2.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnthfap3",
+                      "family":  "Vnthfap3",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/Vnthfap3.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnthfapf",
+                      "family":  "Vnthfapf",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/Vnthfapf.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vntifh",
+                      "family":  "VNTIFH",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNTIFH.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vntime",
+                      "family":  "VNTIME",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNTIME.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vntimeb",
+                      "family":  "VNTIMEB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNTIMEB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vntimebi",
+                      "family":  "VNTIMEBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNTIMEBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vntimei",
+                      "family":  "VNTIMEI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNTIMEI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnuniv",
+                      "family":  "VNUNIV",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNUNIV.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vnvogu",
+                      "family":  "VNVOGU",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VNVOGU.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vpalabi",
+                      "family":  "VPALABI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VPALABI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vpalati",
+                      "family":  "VPALATI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VPALATI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vpalatib",
+                      "family":  "VPALATIB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VPALATIB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vpalatin",
+                      "family":  "VPALATIN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VPALATIN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vswisc",
+                      "family":  "VSWISC",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VSWISC.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vswisec",
+                      "family":  "VSWISEC",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VSWISEC.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vtekti",
+                      "family":  "VTEKTI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VTEKTI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vtektn",
+                      "family":  "VTEKTN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VTEKTN.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vtimesb",
+                      "family":  "VTIMESB",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VTIMESB.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vtimesbi",
+                      "family":  "VTIMESBI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VTIMESBI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vtimesi",
+                      "family":  "VTIMESI",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VTIMESI.TTF",
+                      "license":  ""
+                  },
+                  {
+                      "id":  "vtimesn",
+                      "family":  "VTIMESN",
+                      "weight":  400,
+                      "style":  "normal",
+                      "file":  "fonts/VTIMESN.TTF",
+                      "license":  ""
+                  }
+              ]
+}

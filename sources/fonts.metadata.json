@@ -1,0 +1,10 @@
+{
+  "defaults": {
+    "license": "",
+    "apps": [
+      "download-multi-platform",
+      "*"
+    ]
+  },
+  "fonts": {}
+}

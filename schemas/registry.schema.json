@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/bahungbnck99/app-runtime-assets/main/schemas/registry.schema.json",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "updatedAt",
+    "publisher",
+    "assets"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "updatedAt": {
+      "type": "string"
+    },
+    "publisher": {
+      "type": "string"
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "manifestUrl",
+          "optional"
+        ],
+        "properties": {
+          "manifestUrl": {
+            "type": "string"
+          },
+          "requiredBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "optional": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

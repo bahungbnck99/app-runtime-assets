@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/bahungbnck99/app-runtime-assets/main/schemas/asset-pack.schema.json",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "assetType",
+    "version",
+    "installMode",
+    "items"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "assetType": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "channel": {
+      "type": "string"
+    },
+    "installMode": {
+      "enum": [
+        "zip"
+      ]
+    },
+    "packUrl": {
+      "type": "string"
+    },
+    "packSha256": {
+      "type": "string"
+    },
+    "installDir": {
+      "type": "string"
+    },
+    "apps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "items": {
+      "type": "array"
+    }
+  }
+}
