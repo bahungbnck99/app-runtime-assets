@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "runtimeVersion": "8.1-r1",
+  "os": "windows",
+  "arch": "x86_64",
+  "upstream": {
+    "project": "BtbN/FFmpeg-Builds",
+    "archiveName": "ffmpeg-n8.1-latest-win64-gpl-8.1.zip",
+    "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-n8.1-latest-win64-gpl-8.1.zip",
+    "checksumsUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/checksums.sha256",
+    "sha256": "04f0160cd9cc3ee40dabae108ba408762f773c0ac8d6257a2712239b0dda0fd6",
+    "size": 167401382
+  },
+  "release": {
+    "tag": "ffmpeg-windows-x64-8.1-r1",
+    "archiveName": "ffmpeg-windows-x64-8.1-r1.zip",
+    "packUrl": "https://github.com/bahungbnck99/app-runtime-assets/releases/download/ffmpeg-windows-x64-8.1-r1/ffmpeg-windows-x64-8.1-r1.zip"
+  },
+  "license": {
+    "spdx": "GPL-3.0-or-later",
+    "upstreamFile": "LICENSE.txt"
+  }
+}

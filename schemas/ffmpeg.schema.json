@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/bahungbnck99/app-runtime-assets/main/schemas/ffmpeg.schema.json",
+  "title": "FFmpeg runtime manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "assetType",
+    "runtimeVersion",
+    "os",
+    "arch",
+    "installMode",
+    "packUrl",
+    "packSha256",
+    "ffmpegSha256",
+    "ffprobeSha256"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "assetType": {
+      "const": "ffmpeg"
+    },
+    "runtimeVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "os": {
+      "const": "windows"
+    },
+    "arch": {
+      "const": "x86_64"
+    },
+    "installMode": {
+      "const": "zip"
+    },
+    "packUrl": {
+      "type": "string",
+      "pattern": "^https://github\\.com/[^/]+/[^/]+/releases/download/[^/]+/[^/]+\\.zip$"
+    },
+    "packSha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "ffmpegSha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "ffprobeSha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}

@@ -8,7 +8,65 @@ The app should hardcode only the registry URL:
 https://raw.githubusercontent.com/bahungbnck99/app-runtime-assets/main/manifests/registry.json
 ```
 
-Each asset type has its own manifest and pack. The first implemented asset type is `fonts`.
+Each asset type has its own manifest and pack. The implemented asset types are
+`fonts` and the Windows x64 `ffmpeg` runtime.
+
+## Build FFmpeg Windows x64
+
+The FFmpeg input is pinned by archive name, byte size, and SHA-256 in:
+
+```text
+sources/ffmpeg-windows-x64-8.1-r1.json
+```
+
+Build the release artifact with Windows PowerShell 5.1 or newer:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/update-ffmpeg.ps1
+```
+
+The workflow:
+
+- downloads the pinned BtbN GPL static Windows x64 archive;
+- rejects a moved or corrupted upstream `latest` asset using its pinned SHA-256;
+- extracts only `ffmpeg.exe`, `ffprobe.exe`, and the upstream GPL license;
+- verifies both executable versions and required filters/encoders;
+- runs an H.264 encode/probe smoke test;
+- creates a deterministic ZIP with fixed entry ordering and timestamps;
+- updates `manifests/ffmpeg.json`, `manifests/registry.json`, and
+  `checksums/SHA256SUMS.txt`.
+
+The generated upload file is:
+
+```text
+packs/ffmpeg/ffmpeg-windows-x64-8.1-r1.zip
+```
+
+It is intentionally ignored by Git because its size exceeds GitHub's normal
+Git file limit. Upload it to the GitHub Release tag
+`ffmpeg-windows-x64-8.1-r1`. The manifest already uses the matching immutable
+release URL.
+
+To rebuild without downloading again, pass the verified upstream archive:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/update-ffmpeg.ps1 `
+  -UpstreamArchivePath C:\path\to\ffmpeg-n8.1-latest-win64-gpl-8.1.zip
+```
+
+The ZIP layout is:
+
+```text
+bin/
+  ffmpeg.exe
+  ffprobe.exe
+LICENSES/
+  FFmpeg-GPL-3.0.txt
+  SOURCE-CODE.txt
+BUILD-INFO.txt
+PROVENANCE.json
+pack.json
+```
 
 ## Add Or Update Fonts
 

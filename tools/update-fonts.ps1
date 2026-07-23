@@ -283,17 +283,29 @@ $fontsManifest = [ordered]@{
 }
 Write-Utf8NoBom -Path (Join-Path $manifestsDir "fonts.json") -Content ($fontsManifest | ConvertTo-Json -Depth 10)
 
-$registry = [ordered]@{
-  schemaVersion = 1
-  updatedAt = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
-  publisher = $Owner
-  assets = [ordered]@{
-    fonts = [ordered]@{
-      manifestUrl = "https://raw.githubusercontent.com/$Owner/$Repo/$Branch/manifests/fonts.json"
-      requiredBy = @("download-multi-platform")
-      optional = $false
-    }
+$registryPath = Join-Path $manifestsDir "registry.json"
+$registry = if (Test-Path -LiteralPath $registryPath) {
+  Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
+} else {
+  [pscustomobject]@{
+    schemaVersion = 1
+    updatedAt = ""
+    publisher = $Owner
+    assets = [pscustomobject]@{}
   }
+}
+$registry.schemaVersion = 1
+$registry.updatedAt = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+$registry.publisher = $Owner
+$fontsRegistryEntry = [ordered]@{
+  manifestUrl = "https://raw.githubusercontent.com/$Owner/$Repo/$Branch/manifests/fonts.json"
+  requiredBy = @("download-multi-platform")
+  optional = $false
+}
+if ($registry.assets.PSObject.Properties["fonts"]) {
+  $registry.assets.fonts = $fontsRegistryEntry
+} else {
+  $registry.assets | Add-Member -NotePropertyName "fonts" -NotePropertyValue $fontsRegistryEntry
 }
 Write-Utf8NoBom -Path (Join-Path $manifestsDir "registry.json") -Content ($registry | ConvertTo-Json -Depth 10)
 

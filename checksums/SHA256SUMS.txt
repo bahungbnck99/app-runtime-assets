@@ -1,1 +1,2 @@
 6bda239a899da197ed1258bbd96c32aa8eeabeac14c119e29258b5884e9b5b2e  packs/fonts/fonts-pack-2026.06.26.zip
+3b81fab337ab821c23d9d50a051041a4c544feaffce887f8503d6bd281518c8c  packs/ffmpeg/ffmpeg-windows-x64-8.1-r1.zip

@@ -1,0 +1,12 @@
+{
+    "schemaVersion":  1,
+    "assetType":  "ffmpeg",
+    "runtimeVersion":  "8.1-r1",
+    "os":  "windows",
+    "arch":  "x86_64",
+    "installMode":  "zip",
+    "packUrl":  "https://github.com/bahungbnck99/app-runtime-assets/releases/download/ffmpeg-windows-x64-8.1-r1/ffmpeg-windows-x64-8.1-r1.zip",
+    "packSha256":  "3b81fab337ab821c23d9d50a051041a4c544feaffce887f8503d6bd281518c8c",
+    "ffmpegSha256":  "b8eb07f4cc8613ddc4f18b7a052bd784a224f5de3a7d62b3e2b4a9d98dfcfe24",
+    "ffprobeSha256":  "f288e3920ee255e5a85c873b0f7fdb89ebbab63672ae03fa025cca2fbb3f90bb"
+}

@@ -1,6 +1,6 @@
 {
     "schemaVersion":  1,
-    "updatedAt":  "2026-06-26T08:37:57Z",
+    "updatedAt":  "2026-07-23T18:37:50Z",
     "publisher":  "bahungbnck99",
     "assets":  {
                    "fonts":  {
@@ -9,6 +9,13 @@
                                                     "download-multi-platform"
                                                 ],
                                  "optional":  false
-                             }
+                             },
+                   "ffmpeg":  {
+                                  "manifestUrl":  "https://raw.githubusercontent.com/bahungbnck99/app-runtime-assets/main/manifests/ffmpeg.json",
+                                  "requiredBy":  [
+                                                     "download-multi-platform"
+                                                 ],
+                                  "optional":  false
+                              }
                }
 }

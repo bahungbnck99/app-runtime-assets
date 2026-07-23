@@ -1,3 +1,7 @@
 .work/
 *.download
 *.tmp
+
+# FFmpeg release artifacts are larger than GitHub's normal Git file limit.
+# Build them locally and upload them to a GitHub Release instead.
+packs/ffmpeg/*.zip
