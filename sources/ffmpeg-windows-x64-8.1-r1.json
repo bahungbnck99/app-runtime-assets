@@ -3,13 +3,16 @@
   "runtimeVersion": "8.1-r1",
   "os": "windows",
   "arch": "x86_64",
+  "inputMode": "preservedArchive",
+  "expectedBinaryVersion": "N-124941-g54749da98a-20260610",
   "upstream": {
     "project": "BtbN/FFmpeg-Builds",
-    "archiveName": "ffmpeg-n8.1-latest-win64-gpl-8.1.zip",
-    "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-n8.1-latest-win64-gpl-8.1.zip",
-    "checksumsUrl": "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/checksums.sha256",
-    "sha256": "04f0160cd9cc3ee40dabae108ba408762f773c0ac8d6257a2712239b0dda0fd6",
-    "size": 167401382
+    "archiveName": "ffmpeg-master-20260610-preserved-win64-gpl.zip",
+    "url": "https://github.com/BtbN/FFmpeg-Builds",
+    "checksumsUrl": "",
+    "binaryOrigin": "Known-good installed BtbN GPL static Windows x64 pair, preserved and pinned by executable version, size, and SHA-256.",
+    "sha256": "bc349fb2b23940fbb9813ac247215f85f96ee41006a91435107de2263c4b0bd9",
+    "size": 146720589
   },
   "release": {
     "tag": "ffmpeg-windows-x64-8.1-r1",

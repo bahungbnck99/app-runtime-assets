@@ -28,6 +28,16 @@ if ($definition.os -ne "windows" -or $definition.arch -ne "x86_64") {
 }
 
 $runtimeVersion = [string]$definition.runtimeVersion
+$inputMode = if ($definition.PSObject.Properties["inputMode"]) {
+  [string]$definition.inputMode
+} else {
+  "download"
+}
+$expectedBinaryVersion = if ($definition.PSObject.Properties["expectedBinaryVersion"]) {
+  [string]$definition.expectedBinaryVersion
+} else {
+  ""
+}
 $upstreamArchiveName = [string]$definition.upstream.archiveName
 $upstreamUrl = [string]$definition.upstream.url
 $expectedUpstreamSha256 = ([string]$definition.upstream.sha256).ToLowerInvariant()
@@ -183,7 +193,14 @@ function New-DeterministicZip([string]$SourceDirectory, [string]$Destination) {
 
 if ([string]::IsNullOrWhiteSpace($UpstreamArchivePath)) {
   $UpstreamArchivePath = Join-Path $downloadDir $upstreamArchiveName
-  if ($ForceDownload -or -not (Test-Path -LiteralPath $UpstreamArchivePath)) {
+  if ($inputMode -eq "preservedArchive") {
+    if ($ForceDownload) {
+      throw "ForceDownload is not supported for a preserved FFmpeg archive."
+    }
+    if (-not (Test-Path -LiteralPath $UpstreamArchivePath)) {
+      throw "The pinned preserved FFmpeg archive is missing: $UpstreamArchivePath. Restore it locally or pass -UpstreamArchivePath."
+    }
+  } elseif ($ForceDownload -or -not (Test-Path -LiteralPath $UpstreamArchivePath)) {
     Write-Host "Downloading pinned upstream FFmpeg archive..."
     Download-File -Url $upstreamUrl -Destination $UpstreamArchivePath
   }
@@ -232,7 +249,11 @@ $probeActualVersion = ($ffprobeVersionLine -replace "^ffprobe version\s+", "").S
 if ($actualVersion -ne $probeActualVersion) {
   throw "ffmpeg and ffprobe versions differ: $actualVersion vs $probeActualVersion"
 }
-if ($actualVersion -notmatch "^n8\.1(\.|-|$)") {
+if (-not [string]::IsNullOrWhiteSpace($expectedBinaryVersion)) {
+  if ($actualVersion -ne $expectedBinaryVersion) {
+    throw "Unexpected FFmpeg binary version. Expected $expectedBinaryVersion, got $actualVersion"
+  }
+} elseif ($actualVersion -notmatch "^n8\.1(\.|-|$)") {
   throw "Unexpected FFmpeg release branch: $actualVersion"
 }
 
@@ -283,8 +304,8 @@ FFmpeg source and license information
 =====================================
 
 This package redistributes unmodified ffmpeg.exe and ffprobe.exe files from
-the pinned BtbN/FFmpeg-Builds GPL static Windows x64 archive described in
-PROVENANCE.json.
+the pinned BtbN/FFmpeg-Builds GPL static Windows x64 binary pair described
+and verified in PROVENANCE.json.
 
 FFmpeg corresponding source:
 $sourceCodeUrl
@@ -308,9 +329,15 @@ $provenance = [ordered]@{
   arch = "x86_64"
   upstream = [ordered]@{
     project = [string]$definition.upstream.project
+    inputMode = $inputMode
     archiveName = $upstreamArchiveName
     url = $upstreamUrl
     checksumsUrl = [string]$definition.upstream.checksumsUrl
+    binaryOrigin = if ($definition.upstream.PSObject.Properties["binaryOrigin"]) {
+      [string]$definition.upstream.binaryOrigin
+    } else {
+      ""
+    }
     sha256 = $upstreamHash
     size = $upstreamSize
   }

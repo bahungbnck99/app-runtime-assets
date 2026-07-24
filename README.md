@@ -13,7 +13,8 @@ Each asset type has its own manifest and pack. The implemented asset types are
 
 ## Build FFmpeg Windows x64
 
-The FFmpeg input is pinned by archive name, byte size, and SHA-256 in:
+The FFmpeg input is pinned by archive name, byte size, executable version,
+and SHA-256 in:
 
 ```text
 sources/ffmpeg-windows-x64-8.1-r1.json
@@ -25,10 +26,15 @@ Build the release artifact with Windows PowerShell 5.1 or newer:
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/update-ffmpeg.ps1
 ```
 
+The current `8.1-r1` package preserves the known-good BtbN master build
+`N-124941-g54749da98a-20260610` used by the application. The release tag and
+asset name remain unchanged for compatibility.
+
 The workflow:
 
-- downloads the pinned BtbN GPL static Windows x64 archive;
-- rejects a moved or corrupted upstream `latest` asset using its pinned SHA-256;
+- loads the pinned preserved BtbN GPL static Windows x64 archive;
+- rejects a different archive or executable build using pinned version, size,
+  and SHA-256 values;
 - extracts only `ffmpeg.exe`, `ffprobe.exe`, and the upstream GPL license;
 - verifies both executable versions and required filters/encoders;
 - runs an H.264 encode/probe smoke test;
@@ -47,11 +53,13 @@ Git file limit. Upload it to the GitHub Release tag
 `ffmpeg-windows-x64-8.1-r1`. The manifest already uses the matching immutable
 release URL.
 
-To rebuild without downloading again, pass the verified upstream archive:
+The preserved source archive is intentionally local under `.work/downloads`
+and is not committed. To rebuild, restore that verified archive or pass it
+explicitly:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/update-ffmpeg.ps1 `
-  -UpstreamArchivePath C:\path\to\ffmpeg-n8.1-latest-win64-gpl-8.1.zip
+  -UpstreamArchivePath C:\path\to\ffmpeg-master-20260610-preserved-win64-gpl.zip
 ```
 
 The ZIP layout is:
