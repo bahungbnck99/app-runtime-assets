@@ -1,0 +1,13 @@
+Candidate temporal model declaration
+====================================
+
+mostafaalazzaly/aleris-violence-detector-x3d-resnet18
+Revision: b7682b5495416292e9a9d1ebe051e6865e986ebd
+Declared model license: Apache-2.0
+Source:
+https://huggingface.co/mostafaalazzaly/aleris-violence-detector-x3d-resnet18
+
+This is a candidate checkpoint. Its model card identifies a custom dataset
+but does not provide the dataset inventory and rights evidence required by
+the production release gate. It is therefore not approved for a production
+release.

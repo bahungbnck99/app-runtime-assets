@@ -1,0 +1,7 @@
+Sensitive-content worker
+Copyright (c) 2026 DownloadMuliPlatform contributors.
+
+This worker is distributed only as part of the DownloadMuliPlatform runtime
+asset system. No permission is granted to redistribute a production bundle
+until every model, dataset and third-party license listed by the release
+qualification report has been reviewed and approved.

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/bahungbnck99/app-runtime-assets/main/schemas/sensitive-content.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "assetType",
+    "runtimeVersion",
+    "modelBundleVersion",
+    "modelBundleHash",
+    "calibrationVersion",
+    "os",
+    "arch",
+    "installMode",
+    "packUrl",
+    "packSha256",
+    "workerFile",
+    "files",
+    "licenses"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "assetType": {"const": "sensitive-content"},
+    "runtimeVersion": {"type": "string", "minLength": 1},
+    "modelBundleVersion": {"type": "string", "minLength": 1},
+    "modelBundleHash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "calibrationVersion": {"type": "string", "minLength": 1},
+    "os": {"const": "windows"},
+    "arch": {"const": "x86_64"},
+    "installMode": {"const": "zip"},
+    "packUrl": {"type": "string", "format": "uri"},
+    "packSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "workerFile": {"type": "string", "minLength": 1},
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "bytes", "sha256"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "bytes": {"type": "integer", "minimum": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "licenses": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "bundleId": "sensitive-content-candidates",
+  "bundleVersion": "1.0.0",
+  "builder": {
+    "os": "windows",
+    "arch": "x86_64",
+    "pythonVersion": "3.12.10",
+    "requirements": "sensitive-content/worker/requirements-build.txt"
+  },
+  "releaseEligible": false,
+  "releaseBlockers": [
+    "No repository-owned, rights-cleared cross-domain qualification dataset is available.",
+    "The upstream model cards do not provide sufficient training-data rights evidence for a commercial production decision.",
+    "The three sensitivity profiles have not been calibrated on the application's target domains."
+  ],
+  "models": [
+    {
+      "id": "image-safety-classifier-xs",
+      "role": "adult_nudity_and_blood_gore_image_classifier",
+      "repository": "OwenElliott/image-safety-classifier-xs",
+      "revision": "54f4560bd9c5ee92d45dc30418a8f8680e80de6d",
+      "file": "onnx/image-safety-classifier-xs.onnx",
+      "packPath": "models/image-safety-classifier-xs.onnx",
+      "url": "https://huggingface.co/OwenElliott/image-safety-classifier-xs/resolve/54f4560bd9c5ee92d45dc30418a8f8680e80de6d/onnx/image-safety-classifier-xs.onnx?download=true",
+      "bytes": 13137569,
+      "sha256": "8c28c49d9075f3ad15ebdc2961f02d5b3f99be944815b848b49c9f0e6f3fb689",
+      "declaredLicense": "MIT",
+      "input": {
+        "name": "image",
+        "shape": ["batch", 3, 224, 224],
+        "dtype": "float32",
+        "rgbRange": [0, 255],
+        "preprocessingInGraph": true
+      },
+      "output": {
+        "name": "probabilities",
+        "labels": ["NSFL", "NSFW", "SFW"],
+        "activationInGraph": "softmax"
+      }
+    },
+    {
+      "id": "image-multi-detect",
+      "role": "adult_nudity_static_violence_and_weapon_image_classifier",
+      "repository": "abhi099k/image-multi-detect",
+      "revision": "bc2e3ac9e09f12fc9f96187ba3c90a26292d2b52",
+      "file": "model.onnx",
+      "packPath": "models/image-multi-detect.onnx",
+      "url": "https://huggingface.co/abhi099k/image-multi-detect/resolve/bc2e3ac9e09f12fc9f96187ba3c90a26292d2b52/model.onnx?download=true",
+      "bytes": 94015943,
+      "sha256": "fd36b610b1a280763238bb750885e56838965fbdad0c6b634cb1ea064eb060d3",
+      "declaredLicense": "MIT",
+      "input": {
+        "name": "input",
+        "shape": ["batch", 3, 224, 224],
+        "dtype": "float32",
+        "rgbRange": [0, 1],
+        "mean": [0.485, 0.456, 0.406],
+        "std": [0.229, 0.224, 0.225]
+      },
+      "output": {
+        "name": "logits",
+        "labels": ["nsfw", "violence", "weapon", "smoking", "alcohol", "drugs", "sensitive", "hate"],
+        "activation": "sigmoid"
+      }
+    },
+    {
+      "id": "aleris-violence-temporal",
+      "role": "violence_temporal_classifier",
+      "repository": "mostafaalazzaly/aleris-violence-detector-x3d-resnet18",
+      "revision": "b7682b5495416292e9a9d1ebe051e6865e986ebd",
+      "file": "aleris-violence-detector-x3d-resnet18.onnx",
+      "packPath": "models/aleris-violence-temporal.onnx",
+      "url": "https://huggingface.co/mostafaalazzaly/aleris-violence-detector-x3d-resnet18/resolve/b7682b5495416292e9a9d1ebe051e6865e986ebd/aleris-violence-detector-x3d-resnet18.onnx?download=true",
+      "bytes": 69756296,
+      "sha256": "dff225ca8db8458a19fed216ee6f8e86b61cf051d5ae60e6f44056754d7a7243",
+      "declaredLicense": "Apache-2.0",
+      "input": {
+        "name": "input",
+        "shape": ["batch", 16, 3, 224, 224],
+        "dtype": "float32",
+        "rgbRange": [0, 1],
+        "mean": [0.45, 0.45, 0.45],
+        "std": [0.225, 0.225, 0.225]
+      },
+      "output": {
+        "name": "output",
+        "labels": ["non_violent", "violent"],
+        "activation": "softmax"
+      }
+    }
+  ]
+}

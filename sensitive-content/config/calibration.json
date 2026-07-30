@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "calibrationVersion": "1.0.0-candidate.1",
+  "qualificationStatus": "candidate_only",
+  "imageSize": 224,
+  "coarseFps": 1.0,
+  "refineFps": 4.0,
+  "refinePaddingSeconds": 2.0,
+  "maxCandidateCoverageRatio": 0.75,
+  "maxCandidateRanges": 10000,
+  "maxOutputSegments": 100000,
+  "staticBatchSize": 16,
+  "temporalWindowFrames": 16,
+  "temporalStrideFrames": 4,
+  "profiles": {
+    "sensitive": {
+      "candidateThreshold": 0.25,
+      "triggerThreshold": 0.55,
+      "strongThreshold": 0.9,
+      "consecutiveHits": 1
+    },
+    "balanced": {
+      "candidateThreshold": 0.35,
+      "triggerThreshold": 0.72,
+      "strongThreshold": 0.92,
+      "consecutiveHits": 2
+    },
+    "low_false_positive": {
+      "candidateThreshold": 0.5,
+      "triggerThreshold": 0.85,
+      "strongThreshold": 0.95,
+      "consecutiveHits": 3
+    }
+  },
+  "fusion": {
+    "adult_nudity": [
+      {"model": "image-safety-classifier-xs", "label": "NSFW", "weight": 1.0},
+      {"model": "image-multi-detect", "label": "nsfw", "weight": 1.0}
+    ],
+    "blood_gore": [
+      {"model": "image-safety-classifier-xs", "label": "NSFL", "weight": 1.0}
+    ],
+    "violence_weapons": [
+      {"model": "image-multi-detect", "label": "violence", "weight": 1.0},
+      {"model": "image-multi-detect", "label": "weapon", "weight": 1.0},
+      {"model": "aleris-violence-temporal", "label": "violent", "weight": 1.0}
+    ]
+  }
+}

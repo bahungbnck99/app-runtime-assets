@@ -1,7 +1,14 @@
 .work/
 *.download
 *.tmp
+__pycache__/
+*.py[cod]
 
 # FFmpeg release artifacts are larger than GitHub's normal Git file limit.
 # Build them locally and upload them to a GitHub Release instead.
 packs/ffmpeg/*.zip
+
+# Sensitive-content models, PyInstaller output and release ZIPs are generated
+# locally from pinned definitions. Publish the ZIP as a GitHub Release asset.
+sensitive-content/models/
+packs/sensitive-content/*.zip

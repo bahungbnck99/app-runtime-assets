@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "bundleVersion": "1.0.0",
+  "calibrationVersion": "1.0.0-candidate.1",
+  "releaseGatePassed": false,
+  "approvedBy": null,
+  "approvedAt": null,
+  "commercialUseDecision": "blocked_pending_rights_review",
+  "rightsAudit": {
+    "modelWeightsApproved": false,
+    "trainingDataApproved": false,
+    "thirdPartyRuntimeApproved": false,
+    "reviewer": null
+  },
+  "licenseFiles": [],
+  "benchmarkReportSha256": null,
+  "dataset": {
+    "name": null,
+    "version": null,
+    "sha256": null,
+    "licenseDecision": "missing",
+    "domains": {
+      "live_action": 0,
+      "animation_game": 0,
+      "medical": 0,
+      "news": 0,
+      "sports": 0
+    }
+  },
+  "profiles": {
+    "sensitive": {
+      "segmentPrecision": null,
+      "segmentRecall": null,
+      "falsePositiveMinutesPerHour": null,
+      "falseNegativeEventRate": null,
+      "boundaryLeadSecondsP95": null,
+      "boundaryLagSecondsP95": null
+    },
+    "balanced": {
+      "segmentPrecision": null,
+      "segmentRecall": null,
+      "falsePositiveMinutesPerHour": null,
+      "falseNegativeEventRate": null,
+      "boundaryLeadSecondsP95": null,
+      "boundaryLagSecondsP95": null
+    },
+    "low_false_positive": {
+      "segmentPrecision": null,
+      "segmentRecall": null,
+      "falsePositiveMinutesPerHour": null,
+      "falseNegativeEventRate": null,
+      "boundaryLeadSecondsP95": null,
+      "boundaryLagSecondsP95": null
+    }
+  },
+  "runtime": {
+    "cpuQualified": false,
+    "cudaQualified": false,
+    "tensorrtQualified": false,
+    "testedHardware": []
+  },
+  "notes": [
+    "This template is intentionally fail-closed.",
+    "Every licenseFiles entry must contain a path under sensitive-content/licenses and its SHA-256.",
+    "Do not change releaseGatePassed until model rights, cross-domain metrics, calibration and runtime soak tests are complete."
+  ]
+}

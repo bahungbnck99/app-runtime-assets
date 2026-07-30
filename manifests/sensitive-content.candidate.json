@@ -1,0 +1,363 @@
+{
+    "schemaVersion":  1,
+    "assetType":  "sensitive-content",
+    "runtimeVersion":  "1.0.0-candidate.1",
+    "modelBundleVersion":  "1.0.0",
+    "modelBundleHash":  "a21e22a3281ba2242d5393393c66d3c4bb3f3b63e968b38be13fd89e5be39808",
+    "calibrationVersion":  "1.0.0-candidate.1",
+    "os":  "windows",
+    "arch":  "x86_64",
+    "installMode":  "zip",
+    "packUrl":  "https://github.com/bahungbnck99/app-runtime-assets/releases/download/sensitive-content-1.0.0-candidate.1/sensitive-content-windows-x86_64.zip",
+    "packSha256":  "c74144346cddacf3f4cc1782aa867c8383017c0f12c17466dd4a6cad32919c7f",
+    "workerFile":  "bin/sensitive-content-worker.exe",
+    "files":  [
+                  {
+                      "path":  "bin/_internal/_asyncio.pyd",
+                      "bytes":  74096,
+                      "sha256":  "c77de90cad749087a0c5dc5e19d78d24f6ef44e7e5ac19b8420cfc0cea62395d"
+                  },
+                  {
+                      "path":  "bin/_internal/_bz2.pyd",
+                      "bytes":  86896,
+                      "sha256":  "65f610646d10d5babea080e060d244b546ec52c54012e5e937dc72dcc2e2e7bc"
+                  },
+                  {
+                      "path":  "bin/_internal/_ctypes.pyd",
+                      "bytes":  127480,
+                      "sha256":  "0e56107a891100535f2da79d85a5ae65ff1227b4765bd108f8593ac1a1110d81"
+                  },
+                  {
+                      "path":  "bin/_internal/_decimal.pyd",
+                      "bytes":  262000,
+                      "sha256":  "aeacfead2befcc0768063a037bb64bd32109ae09cb144e5f571b04dd7965db9d"
+                  },
+                  {
+                      "path":  "bin/_internal/_hashlib.pyd",
+                      "bytes":  68976,
+                      "sha256":  "03d233dbace599168eaffec823de6ed7beec8c2a4ebfe9b8a3d8e042a59af3ba"
+                  },
+                  {
+                      "path":  "bin/_internal/_lzma.pyd",
+                      "bytes":  161136,
+                      "sha256":  "e3deecc1f59a3b811c608861decd84de1e8df8bafd5e2b39188861318c5a38cf"
+                  },
+                  {
+                      "path":  "bin/_internal/_multiprocessing.pyd",
+                      "bytes":  37368,
+                      "sha256":  "2c636df7059cb0dd7e978dd735c7c5c8ddb09cf94754cf9e232296b96c5c545a"
+                  },
+                  {
+                      "path":  "bin/_internal/_overlapped.pyd",
+                      "bytes":  57336,
+                      "sha256":  "662126ff80c3a1b4cedf74074029c12ae4743e6d3b37376e39ac70aacb7d4d3c"
+                  },
+                  {
+                      "path":  "bin/_internal/_queue.pyd",
+                      "bytes":  33784,
+                      "sha256":  "48e76e0ad63f6932b4a77b5819f41c1e7595636ca8d9e824f0943a14b8bb5035"
+                  },
+                  {
+                      "path":  "bin/_internal/_socket.pyd",
+                      "bytes":  85496,
+                      "sha256":  "3efa4636cf9e350856f6927d67a4c2564bf9bd2758a00bbf17d3aece5b60016d"
+                  },
+                  {
+                      "path":  "bin/_internal/_ssl.pyd",
+                      "bytes":  179432,
+                      "sha256":  "0bc527d2dbc50009f43b2ed5d5982c4f63f4b647647ffa9eda612dcda80f6040"
+                  },
+                  {
+                      "path":  "bin/_internal/_wmi.pyd",
+                      "bytes":  40304,
+                      "sha256":  "a980f1e7a29842bd946863fc2693fbeb555a9dc0f9e1630dfed9a2fcdef3ece2"
+                  },
+                  {
+                      "path":  "bin/_internal/base_library.zip",
+                      "bytes":  1331373,
+                      "sha256":  "ee041fd5a68a2c7274fee9c95f3111bd9be6da908a1b56943f1d121b6852c5e4"
+                  },
+                  {
+                      "path":  "bin/_internal/libcrypto-3.dll",
+                      "bytes":  5231472,
+                      "sha256":  "ccfffddcd3defb8d899026298af9af43bc186130f8483d77e97c93233d5f27d7"
+                  },
+                  {
+                      "path":  "bin/_internal/libffi-8.dll",
+                      "bytes":  39696,
+                      "sha256":  "eff52743773eb550fcc6ce3efc37c85724502233b6b002a35496d828bd7b280a"
+                  },
+                  {
+                      "path":  "bin/_internal/libssl-3.dll",
+                      "bytes":  794992,
+                      "sha256":  "007142039f04d04e0ed607bda53de095e5bc6a8a10d26ecedde94ea7d2d7eefe"
+                  },
+                  {
+                      "path":  "bin/_internal/msvcp140.dll",
+                      "bytes":  553552,
+                      "sha256":  "def46aa6a8f72f27bafac0c43334419486a4d1dcdb6c479a8ef7034b3e1fa4cb"
+                  },
+                  {
+                      "path":  "bin/_internal/MSVCP140_1.dll",
+                      "bytes":  35488,
+                      "sha256":  "2dd670f874562fbdca5b022df1943d70a57ba91fde559280e3a1daebe4db2380"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy.libs/libscipy_openblas64_-860d95b1c38e637ce4509f5fa24fbf2a.dll",
+                      "bytes":  20403712,
+                      "sha256":  "860d95b1c38e637ce4509f5fa24fbf2a98ba8696f9f3d28bf184bee74ad9a325"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll",
+                      "bytes":  575056,
+                      "sha256":  "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/_core/_multiarray_tests.cp312-win_amd64.pyd",
+                      "bytes":  63488,
+                      "sha256":  "d8cb4324e2cd34b016b8b030b9cbc879732fe4c7aa0acab9f6f190b977cd115e"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/_core/_multiarray_umath.cp312-win_amd64.pyd",
+                      "bytes":  4531200,
+                      "sha256":  "bc2d659c4a14fb70d2a5b1fc4219040412c1979171e6b45a80aacdcf8a53a4c2"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/fft/_pocketfft_umath.cp312-win_amd64.pyd",
+                      "bytes":  276480,
+                      "sha256":  "e565aaf2f47c7af13a6eefa4ad5b696e032a1599cc562dce16296e5dfe4cb3b4"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/linalg/_umath_linalg.cp312-win_amd64.pyd",
+                      "bytes":  111104,
+                      "sha256":  "9c184435951aaf26caac6588f3bbb52ab6003aa5a4877e7bc7c86537763b8562"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/random/_bounded_integers.cp312-win_amd64.pyd",
+                      "bytes":  210432,
+                      "sha256":  "2e16cece6b36e99b4b79231dc6eec037d80f1f9bc7c905624f188f93e6f55a24"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/random/_common.cp312-win_amd64.pyd",
+                      "bytes":  165376,
+                      "sha256":  "7d5932d5df4cae402e3fb0df71e12d4326073973db1b480f157c065d2931dfbb"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/random/_generator.cp312-win_amd64.pyd",
+                      "bytes":  719872,
+                      "sha256":  "a105eca9067dab11fe3c4fac0763eeca8b4ba4cbae92a4170de3b77580a90c2f"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/random/_mt19937.cp312-win_amd64.pyd",
+                      "bytes":  86016,
+                      "sha256":  "9dd6f001d24c8086e364f234f17ac20c17fc6549ca66f1950dcf3e378f7df079"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/random/_pcg64.cp312-win_amd64.pyd",
+                      "bytes":  96256,
+                      "sha256":  "f8ae5d1ca1a6befbfa7503f7049bf235a16a9142a836a74c4edc81b646a8b51a"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/random/_philox.cp312-win_amd64.pyd",
+                      "bytes":  79872,
+                      "sha256":  "1aea385ea164d78feea419659d3e51cf2b642e03a58d5fede92ef0ea0034f7d1"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/random/_sfc64.cp312-win_amd64.pyd",
+                      "bytes":  60928,
+                      "sha256":  "e825031f50ac2d3c6eee5a83108b6296c44db1636681dbd7db6d61226d593149"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/random/bit_generator.cp312-win_amd64.pyd",
+                      "bytes":  167936,
+                      "sha256":  "239ca033cc9c704c67060f9c667a57e5b845b07ed9721332b48187edbb8cd695"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy/random/mtrand.cp312-win_amd64.pyd",
+                      "bytes":  606208,
+                      "sha256":  "d6040a13e28668bd45dea069187f9eff34a3eb30d93f4d734baac027a8a92e4d"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy-2.3.2.dist-info/DELVEWHEEL",
+                      "bytes":  446,
+                      "sha256":  "ca14bba01fd6f711d95b01f0be06e5fa45dd712783674ba1abccd698a3bc7e6c"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy-2.3.2.dist-info/entry_points.txt",
+                      "bytes":  220,
+                      "sha256":  "ec26fade0c8bdac211a6c1dd003a65eb16885b925395423e93fcaa115af4052c"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy-2.3.2.dist-info/INSTALLER",
+                      "bytes":  4,
+                      "sha256":  "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy-2.3.2.dist-info/LICENSE.txt",
+                      "bytes":  47722,
+                      "sha256":  "233d7ab5c32bc4aed6848f647d397007965acdb691c86fe27d17cc3eb60359d1"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy-2.3.2.dist-info/METADATA",
+                      "bytes":  60935,
+                      "sha256":  "c661976f4599de0b71335bff81b60866e8d1bd51773394340089e60af4ce638a"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy-2.3.2.dist-info/RECORD",
+                      "bytes":  110658,
+                      "sha256":  "fd6fafc09572422f241ac57b29446e554b86d574181d97de65135f1bb94afab3"
+                  },
+                  {
+                      "path":  "bin/_internal/numpy-2.3.2.dist-info/WHEEL",
+                      "bytes":  85,
+                      "sha256":  "e743de01ba6503a3e4234858398a1e69c07d512d51e8482ec9f3a7b1c707d165"
+                  },
+                  {
+                      "path":  "bin/_internal/onnxruntime/capi/onnxruntime.dll",
+                      "bytes":  14854688,
+                      "sha256":  "c7151fd9844ad7c7d18525f1177e9ef62d91e4a6ac3583d0be700554a2b2b1d6"
+                  },
+                  {
+                      "path":  "bin/_internal/onnxruntime/capi/onnxruntime_providers_shared.dll",
+                      "bytes":  22064,
+                      "sha256":  "747c2ed0ca260a37d43bac97f6c60bda9f42daada3918ec991d9f6c6e0a01746"
+                  },
+                  {
+                      "path":  "bin/_internal/onnxruntime/capi/onnxruntime_pybind11_state.pyd",
+                      "bytes":  18104872,
+                      "sha256":  "43b25572ace7c2e8990a2f9ae324cdd0d9f6a99540ba0086298863cc4eaa1b37"
+                  },
+                  {
+                      "path":  "bin/_internal/pyexpat.pyd",
+                      "bytes":  205304,
+                      "sha256":  "d615e193d1affcdbfe504e90d3621cbdcff94bf72b79d899126534507fd6d27a"
+                  },
+                  {
+                      "path":  "bin/_internal/pyreadline3-3.5.6.dist-info/INSTALLER",
+                      "bytes":  4,
+                      "sha256":  "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508"
+                  },
+                  {
+                      "path":  "bin/_internal/pyreadline3-3.5.6.dist-info/licenses/LICENSE.md",
+                      "bytes":  2250,
+                      "sha256":  "8fc4d8de61b40533023b16e64528d13371a2e9c68677df79ed5e93ba570471bd"
+                  },
+                  {
+                      "path":  "bin/_internal/pyreadline3-3.5.6.dist-info/METADATA",
+                      "bytes":  4671,
+                      "sha256":  "2f978d86139385f1cfd49f456ac474bec6f61781b08a6e41d09df3f43bc487dc"
+                  },
+                  {
+                      "path":  "bin/_internal/pyreadline3-3.5.6.dist-info/RECORD",
+                      "bytes":  7824,
+                      "sha256":  "dcc9834411a07ef21599b5a4b76c1be9a26888ea0ac2aca052c4ba235f82b396"
+                  },
+                  {
+                      "path":  "bin/_internal/pyreadline3-3.5.6.dist-info/top_level.txt",
+                      "bytes":  21,
+                      "sha256":  "8c5019700560d56cddb148e881866fcaa48c68100ddfcb2a5197a671a0f117d1"
+                  },
+                  {
+                      "path":  "bin/_internal/pyreadline3-3.5.6.dist-info/WHEEL",
+                      "bytes":  91,
+                      "sha256":  "69e6228a0d35958183cc1812f07c565ce837b95eb51bd8a33acba9fa4f68d6c9"
+                  },
+                  {
+                      "path":  "bin/_internal/python312.dll",
+                      "bytes":  6945272,
+                      "sha256":  "9a0e3435aaa680d868150f87ab3e388ad2eebc22f87e036155c7b4eda8cd2120"
+                  },
+                  {
+                      "path":  "bin/_internal/select.pyd",
+                      "bytes":  33136,
+                      "sha256":  "d4d7181b11db0bd22a6cd5cda6f8583d1f5c77615fd0a6ca33350619d6e0438a"
+                  },
+                  {
+                      "path":  "bin/_internal/unicodedata.pyd",
+                      "bytes":  1140592,
+                      "sha256":  "208ee1cd3cbad0828433ca7246b05be2b1ff5569983d27d296c0b38888585488"
+                  },
+                  {
+                      "path":  "bin/_internal/vcruntime140.dll",
+                      "bytes":  123472,
+                      "sha256":  "184146852727a9db4eea06178716bec3cdbb1015c911f6b0f915b184ad7775b2"
+                  },
+                  {
+                      "path":  "bin/_internal/vcruntime140_1.dll",
+                      "bytes":  47264,
+                      "sha256":  "e6bfb3662ab4b1969a73441dbe35c96d51441b6bff8cf1fe7430bd5b246ca605"
+                  },
+                  {
+                      "path":  "bin/sensitive-content-worker.exe",
+                      "bytes":  4758236,
+                      "sha256":  "95856e5ccbcbd218723de3ca58583dc4a029a4a864884b104d27f44f98e174e3"
+                  },
+                  {
+                      "path":  "config/calibration.json",
+                      "bytes":  1424,
+                      "sha256":  "446fa9b3d53d56816b84f021549834c175366b0dd05a9c217fa6af7c84fa67b0"
+                  },
+                  {
+                      "path":  "licenses/DATA-PROVENANCE.txt",
+                      "bytes":  912,
+                      "sha256":  "8b94b1187f31e592d08d97d5e43429afa5b3327623610593b696c4bbf72aa5dd"
+                  },
+                  {
+                      "path":  "licenses/IMAGE-MODEL-LICENSE.txt",
+                      "bytes":  702,
+                      "sha256":  "244f827836b4dee66108b99414d779012059ee65b5f29be294db5cdda87d8758"
+                  },
+                  {
+                      "path":  "licenses/RUNTIME-LICENSE.txt",
+                      "bytes":  357,
+                      "sha256":  "95c3735af6aaa64f93f65e58ed40433ccfb601359555a12cc527484ba8fa23f2"
+                  },
+                  {
+                      "path":  "licenses/TEMPORAL-MODEL-LICENSE.txt",
+                      "bytes":  535,
+                      "sha256":  "f9e59467ab4102085e73444916c263dd74b0cda1e384c135c5a8ffc5454457db"
+                  },
+                  {
+                      "path":  "licenses/THIRD-PARTY-NOTICES.txt",
+                      "bytes":  419,
+                      "sha256":  "16df87f56dc4452aab0dd7f9a2dfe2fa1fa69ab13cf3325fcd98a346f9feb80d"
+                  },
+                  {
+                      "path":  "metadata/model-sources.json",
+                      "bytes":  3721,
+                      "sha256":  "bbd9b3f712b6ccc3ca86b528f28a9972eb4a6e4327350d83a204404ac333746c"
+                  },
+                  {
+                      "path":  "metadata/qualification.json",
+                      "bytes":  1870,
+                      "sha256":  "1259e9e45c2397ae692ad3ad6df01c49d305b7f879e9aa2123fb4ae3a836c186"
+                  },
+                  {
+                      "path":  "models/aleris-violence-temporal.onnx",
+                      "bytes":  69756296,
+                      "sha256":  "dff225ca8db8458a19fed216ee6f8e86b61cf051d5ae60e6f44056754d7a7243"
+                  },
+                  {
+                      "path":  "models/image-multi-detect.onnx",
+                      "bytes":  94015943,
+                      "sha256":  "fd36b610b1a280763238bb750885e56838965fbdad0c6b634cb1ea064eb060d3"
+                  },
+                  {
+                      "path":  "models/image-safety-classifier-xs.onnx",
+                      "bytes":  13137569,
+                      "sha256":  "8c28c49d9075f3ad15ebdc2961f02d5b3f99be944815b848b49c9f0e6f3fb689"
+                  },
+                  {
+                      "path":  "pack.json",
+                      "bytes":  482,
+                      "sha256":  "62b1bb5eb922315d012bb91e77f9eca94330949212c82b372bf9d3cd0a2e5c3f"
+                  }
+              ],
+    "licenses":  [
+                     "licenses/DATA-PROVENANCE.txt",
+                     "licenses/IMAGE-MODEL-LICENSE.txt",
+                     "licenses/RUNTIME-LICENSE.txt",
+                     "licenses/TEMPORAL-MODEL-LICENSE.txt",
+                     "licenses/THIRD-PARTY-NOTICES.txt"
+                 ]
+}

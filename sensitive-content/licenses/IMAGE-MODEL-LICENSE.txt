@@ -1,0 +1,17 @@
+Candidate image model declarations
+==================================
+
+1. OwenElliott/image-safety-classifier-xs
+   Revision: 54f4560bd9c5ee92d45dc30418a8f8680e80de6d
+   Declared model license: MIT
+   Source: https://huggingface.co/OwenElliott/image-safety-classifier-xs
+
+2. abhi099k/image-multi-detect
+   Revision: bc2e3ac9e09f12fc9f96187ba3c90a26292d2b52
+   Declared model license: MIT
+   Source: https://huggingface.co/abhi099k/image-multi-detect
+
+These are candidate checkpoints. The declared weight licenses do not by
+themselves establish sufficient rights in the underlying training data.
+Consequently they are not approved for a production release by this
+repository's fail-closed release gate.
