@@ -245,6 +245,93 @@ def ffmpeg_decode_command(
     ]
 
 
+def ffmpeg_exhaustive_decode_command(ffmpeg: str, source: Path) -> list[str]:
+    """Decode every source frame once without an FPS filter dropping frames."""
+    filter_graph = (
+        f"scale={FRAME_SIZE}:{FRAME_SIZE}:force_original_aspect_ratio=decrease,"
+        f"pad={FRAME_SIZE}:{FRAME_SIZE}:(ow-iw)/2:(oh-ih)/2:black"
+    )
+    return [
+        ffmpeg,
+        "-nostdin",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-i",
+        str(source),
+        "-map",
+        "0:v:0",
+        "-an",
+        "-sn",
+        "-dn",
+        "-vf",
+        filter_graph,
+        "-vsync",
+        "0",
+        "-pix_fmt",
+        "rgb24",
+        "-f",
+        "rawvideo",
+        "pipe:1",
+    ]
+
+
+def decoded_source_frames(
+    ffmpeg: str,
+    source: Path,
+    source_fps: float,
+    source_duration: float,
+) -> Iterator[tuple[int, float, np.ndarray]]:
+    """Stream every decoded source frame and assign it to the render frame grid."""
+    command = ffmpeg_exhaustive_decode_command(ffmpeg, source)
+    process = subprocess.Popen(
+        command,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        creationflags=CREATE_NO_WINDOW,
+    )
+    assert process.stdout is not None
+    assert process.stderr is not None
+    stderr = bytearray()
+    stderr_thread = threading.Thread(
+        target=drain_stderr, args=(process.stderr, stderr), daemon=True
+    )
+    stderr_thread.start()
+    frame_index = 0
+    frame_duration = 1.0 / source_fps
+    last_frame_start = max(0.0, source_duration - frame_duration)
+    try:
+        while True:
+            payload = read_exact(process.stdout, FRAME_BYTES)
+            if not payload:
+                break
+            if len(payload) != FRAME_BYTES:
+                raise WorkerError("FFmpeg returned a truncated exhaustive analysis frame.")
+            frame = np.frombuffer(payload, dtype=np.uint8).reshape(
+                FRAME_SIZE, FRAME_SIZE, 3
+            )
+            timestamp = min(last_frame_start, frame_index * frame_duration)
+            yield frame_index, timestamp, frame
+            frame_index += 1
+    except BaseException:
+        process.kill()
+        process.wait()
+        raise
+    finally:
+        process.stdout.close()
+    status = process.wait()
+    stderr_thread.join(timeout=2)
+    if status != 0:
+        detail = bytes(stderr).decode("utf-8", errors="replace").strip()
+        raise WorkerError(
+            f"FFmpeg exhaustive analysis decode failed with exit code {status}"
+            + (f": {detail}" if detail else ".")
+        )
+    if frame_index == 0:
+        raise WorkerError("FFmpeg returned no video frames for exhaustive analysis.")
+
+
 def decoded_frames(
     ffmpeg: str,
     source: Path,
@@ -751,6 +838,211 @@ def refine_scan(
     return observations
 
 
+def exhaustive_scan(
+    request: AnalysisRequest,
+    calibration: dict[str, Any],
+    models: Models,
+    ffmpeg: str,
+) -> list[Observation]:
+    """Run static inference on every decoded frame and temporal inference end-to-end."""
+    batch_size = int(
+        finite_number(calibration.get("staticBatchSize"), "staticBatchSize", 1, 256)
+    )
+    temporal_fps = finite_number(
+        calibration.get("temporalFps", calibration.get("refineFps")),
+        "temporalFps",
+        0.1,
+        30.0,
+    )
+    window_size = int(
+        finite_number(
+            calibration.get("temporalWindowFrames"),
+            "temporalWindowFrames",
+            2,
+            128,
+        )
+    )
+    stride = int(
+        finite_number(
+            calibration.get("temporalStrideFrames"),
+            "temporalStrideFrames",
+            1,
+            window_size,
+        )
+    )
+    profile = calibration["profiles"][request.sensitivity]
+    threshold = float(profile["triggerThreshold"])
+    frame_duration = 1.0 / request.source_fps
+    expected_frames = max(1, int(math.ceil(request.source_duration * request.source_fps)))
+    temporal_interval = 1.0 / temporal_fps
+    temporal_enabled = (
+        request.categories["blood_gore"]
+        or request.categories["violence_weapons"]
+    )
+    observations: list[Observation] = []
+    static_frames: list[np.ndarray] = []
+    static_times: list[float] = []
+    temporal_frames: deque[np.ndarray] = deque(maxlen=window_size)
+    temporal_times: deque[float] = deque(maxlen=window_size)
+    temporal_scores: deque[dict[str, float]] = deque(maxlen=window_size)
+    full_rate_scores: deque[tuple[float, dict[str, float]]] = deque()
+    next_temporal_time = 0.0
+    temporal_sample_index = 0
+    last_temporal_window_sample = -1
+    processed_frames = 0
+
+    def emit_temporal_window(pad_short_window: bool = False) -> None:
+        nonlocal last_temporal_window_sample
+        if not temporal_frames:
+            return
+        frames = list(temporal_frames)
+        scores = list(temporal_scores)
+        if len(frames) < window_size:
+            if not pad_short_window:
+                return
+            padding = window_size - len(frames)
+            frames = [frames[0]] * padding + frames
+            scores = [scores[0]] * padding + scores
+        temporal_score = models.temporal_score(frames)
+        window_start = max(0.0, temporal_times[0])
+        window_end = min(
+            request.source_duration,
+            temporal_times[-1] + frame_duration,
+        )
+        # Temporal inference is sampled for speed, but evidence fusion must include
+        # every source frame in the same time window. Otherwise a short NSFL hit
+        # between two temporal samples can still be lost.
+        evidence_scores = [
+            values
+            for timestamp, values in full_rate_scores
+            if timestamp + frame_duration >= window_start and timestamp <= window_end
+        ]
+        if not evidence_scores:
+            evidence_scores = scores
+        if request.categories["violence_weapons"] and temporal_score >= threshold:
+            observations.append(
+                Observation(
+                    window_start,
+                    window_end,
+                    "violence_weapons",
+                    temporal_score,
+                )
+            )
+        if request.categories["blood_gore"]:
+            temporal_color = temporal_blood_color_evidence(
+                (value["_blood_color"] for value in evidence_scores),
+                models.blood_calibration,
+            )
+            # Keep evidence from every frame, but do not combine unrelated maxima
+            # from different frames (for example red lips plus a nearby action cut).
+            blood_score = max(
+                fused_blood_gore_score(
+                    {
+                        "blood_gore": value["blood_gore"],
+                        # Persistence validates color evidence; it does not move
+                        # that evidence onto a different high-violence frame.
+                        "_blood_color": (
+                            value["_blood_color"] if temporal_color > 0.0 else 0.0
+                        ),
+                        "_violence_static": value["_violence_static"],
+                    },
+                    profile,
+                    temporal_context=temporal_score,
+                )
+                for value in evidence_scores
+            )
+            if blood_score >= threshold:
+                observations.append(
+                    Observation(
+                        window_start,
+                        window_end,
+                        "blood_gore",
+                        blood_score,
+                    )
+                )
+        last_temporal_window_sample = temporal_sample_index - 1
+
+    def append_temporal(
+        timestamp: float, frame: np.ndarray, values: dict[str, float]
+    ) -> None:
+        nonlocal next_temporal_time, temporal_sample_index
+        if not temporal_enabled:
+            return
+        tolerance = frame_duration / 2.0
+        if timestamp + tolerance < next_temporal_time:
+            return
+        temporal_frames.append(frame)
+        temporal_times.append(timestamp)
+        temporal_scores.append(values)
+        temporal_sample_index += 1
+        while next_temporal_time <= timestamp + tolerance:
+            next_temporal_time += temporal_interval
+        if (
+            len(temporal_frames) == window_size
+            and (temporal_sample_index - window_size) % stride == 0
+        ):
+            emit_temporal_window()
+
+    def flush_static() -> None:
+        nonlocal processed_frames
+        scores = models.static_scores(static_frames)
+        for timestamp, frame, values in zip(
+            static_times, static_frames, scores, strict=True
+        ):
+            full_rate_scores.append((timestamp, values))
+            retention_start = timestamp - (
+                window_size * temporal_interval + frame_duration
+            )
+            while full_rate_scores and full_rate_scores[0][0] < retention_start:
+                full_rate_scores.popleft()
+            for category in SUPPORTED_CATEGORIES:
+                if not request.categories[category]:
+                    continue
+                score = (
+                    fused_blood_gore_score(values, profile)
+                    if category == "blood_gore"
+                    else values[category]
+                )
+                if score >= threshold:
+                    observations.append(
+                        Observation(
+                            timestamp,
+                            min(request.source_duration, timestamp + frame_duration),
+                            category,
+                            score,
+                        )
+                    )
+            append_temporal(timestamp, frame, values)
+        processed_frames += len(static_frames)
+        static_frames.clear()
+        static_times.clear()
+        emit_progress(
+            0.08 + 0.90 * min(1.0, processed_frames / expected_frames),
+            "exhaustive_scan",
+            f"Scanned {processed_frames}/{expected_frames} source frames",
+        )
+
+    for _frame_index, timestamp, frame in decoded_source_frames(
+        ffmpeg,
+        request.source_path,
+        request.source_fps,
+        request.source_duration,
+    ):
+        static_times.append(timestamp)
+        static_frames.append(frame)
+        if len(static_frames) >= batch_size:
+            flush_static()
+    if static_frames:
+        flush_static()
+
+    # Cover short videos and the final temporal stride instead of leaving a tail unchecked.
+    if temporal_enabled and temporal_sample_index > 0:
+        final_sample = temporal_sample_index - 1
+        if last_temporal_window_sample < final_sample:
+            emit_temporal_window(pad_short_window=True)
+    return observations
+
+
 def observations_to_segments(
     observations: list[Observation],
     request: AnalysisRequest,
@@ -760,7 +1052,11 @@ def observations_to_segments(
         return []
     profile = calibration["profiles"][request.sensitivity]
     strong = float(profile["strongThreshold"])
-    consecutive = int(profile["consecutiveHits"])
+    consecutive = int(
+        calibration.get("exhaustiveConsecutiveHits", profile["consecutiveHits"])
+    )
+    if consecutive < 1:
+        raise WorkerError("Exhaustive evidence-frame calibration is invalid.")
     refine_fps = float(calibration["refineFps"])
     category_segments: list[dict[str, Any]] = []
     for category in SUPPORTED_CATEGORIES:
@@ -820,14 +1116,12 @@ def analyze(line: str) -> None:
     emit_progress(0.02, "loading_models", "Loading local CPU inference sessions")
     models = Models(root, request.categories, calibration)
     ffmpeg = resolve_ffmpeg()
-    emit_progress(0.06, "coarse_scan", "Scanning source video without audio")
-    ranges = coarse_scan(request, calibration, models, ffmpeg)
     emit_progress(
-        0.54,
-        "candidate_merge",
-        f"Found {len(ranges)} candidate ranges",
+        0.06,
+        "exhaustive_scan",
+        "Scanning every decoded source frame without audio",
     )
-    observations = refine_scan(request, calibration, models, ffmpeg, ranges)
+    observations = exhaustive_scan(request, calibration, models, ffmpeg)
     segments = observations_to_segments(observations, request, calibration)
     emit(
         {

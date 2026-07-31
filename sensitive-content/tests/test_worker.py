@@ -241,6 +241,259 @@ class WorkerContractTests(unittest.TestCase):
         self.assertEqual(command[-2:], ["rawvideo", "pipe:1"])
         self.assertNotIn("-c:a", command)
 
+    def test_exhaustive_decode_preserves_source_frames_without_fps_filter(self) -> None:
+        command = worker.ffmpeg_exhaustive_decode_command(
+            "ffmpeg.exe", Path("source.mp4")
+        )
+        filter_graph = command[command.index("-vf") + 1]
+        self.assertNotIn("fps=", filter_graph)
+        self.assertEqual(command[command.index("-vsync") + 1], "0")
+        self.assertIn("-an", command)
+        self.assertIn("-sn", command)
+        self.assertIn("-dn", command)
+
+    def test_exhaustive_scan_sends_every_decoded_frame_to_static_inference(self) -> None:
+        request = worker.AnalysisRequest(
+            Path("fixture.mp4"),
+            1.0,
+            5.0,
+            {
+                "adult_nudity": True,
+                "blood_gore": False,
+                "violence_weapons": False,
+            },
+            "balanced",
+        )
+        calibration = {
+            "staticBatchSize": 2,
+            "refineFps": 4.0,
+            "temporalFps": 4.0,
+            "temporalWindowFrames": 4,
+            "temporalStrideFrames": 1,
+            "profiles": {
+                "balanced": {
+                    "triggerThreshold": 0.72,
+                    "strongThreshold": 0.92,
+                    "consecutiveHits": 2,
+                }
+            },
+        }
+        frames = [
+            np.full(
+                (worker.FRAME_SIZE, worker.FRAME_SIZE, 3), index, dtype=np.uint8
+            )
+            for index in range(5)
+        ]
+
+        class FakeModels:
+            def __init__(self) -> None:
+                self.seen: list[int] = []
+
+            def static_scores(
+                self, batch: list[np.ndarray]
+            ) -> list[dict[str, float]]:
+                values: list[dict[str, float]] = []
+                for frame in batch:
+                    index = int(frame[0, 0, 0])
+                    self.seen.append(index)
+                    values.append(
+                        {
+                            "adult_nudity": 0.8 if index == 3 else 0.0,
+                            "blood_gore": 0.0,
+                            "violence_weapons": 0.0,
+                            "_blood_color": 0.0,
+                            "_violence_static": 0.0,
+                        }
+                    )
+                return values
+
+        models = FakeModels()
+        decoded = (
+            (index, index / request.source_fps, frame)
+            for index, frame in enumerate(frames)
+        )
+        with patch.object(worker, "decoded_source_frames", return_value=decoded):
+            observations = worker.exhaustive_scan(
+                request, calibration, models, "ffmpeg.exe"
+            )
+        self.assertEqual(models.seen, [0, 1, 2, 3, 4])
+        self.assertEqual(len(observations), 1)
+        self.assertEqual(observations[0].start, 0.6)
+
+    def test_exhaustive_segments_keep_a_single_valid_frame(self) -> None:
+        request = worker.AnalysisRequest(
+            Path("fixture.mp4"),
+            10.0,
+            30.0,
+            {
+                "adult_nudity": False,
+                "blood_gore": True,
+                "violence_weapons": False,
+            },
+            "balanced",
+        )
+        calibration = {
+            "refineFps": 4.0,
+            "exhaustiveConsecutiveHits": 1,
+            "maxOutputSegments": 100,
+            "profiles": {
+                "balanced": {
+                    "strongThreshold": 0.92,
+                    "consecutiveHits": 2,
+                }
+            },
+        }
+        segments = worker.observations_to_segments(
+            [worker.Observation(7.0, 7.0 + 1.0 / 30.0, "blood_gore", 0.8)],
+            request,
+            calibration,
+        )
+        self.assertEqual(len(segments), 1)
+        self.assertEqual(segments[0]["sourceStart"], 7.0)
+
+    def test_temporal_fusion_keeps_evidence_between_temporal_samples(self) -> None:
+        request = worker.AnalysisRequest(
+            Path("fixture.mp4"),
+            2.0,
+            8.0,
+            {
+                "adult_nudity": False,
+                "blood_gore": True,
+                "violence_weapons": False,
+            },
+            "balanced",
+        )
+        calibration = {
+            "staticBatchSize": 16,
+            "refineFps": 2.0,
+            "temporalFps": 2.0,
+            "temporalWindowFrames": 4,
+            "temporalStrideFrames": 1,
+            "profiles": {
+                "balanced": {
+                    "triggerThreshold": 0.72,
+                    "bloodContextThreshold": 0.6,
+                    "bloodNsflAssistScale": 0.45,
+                }
+            },
+        }
+        frames = [
+            np.full(
+                (worker.FRAME_SIZE, worker.FRAME_SIZE, 3), index, dtype=np.uint8
+            )
+            for index in range(16)
+        ]
+
+        class FakeModels:
+            blood_calibration = {
+                "temporalEvidenceFloor": 0.18,
+                "temporalMinimumEvidenceFrames": 2,
+            }
+
+            def static_scores(
+                self, batch: list[np.ndarray]
+            ) -> list[dict[str, float]]:
+                return [
+                    {
+                        "adult_nudity": 0.0,
+                        # Frame 2 sits between temporal samples 0 and 4.
+                        "blood_gore": 0.4 if int(frame[0, 0, 0]) == 2 else 0.0,
+                        "violence_weapons": 0.0,
+                        "_blood_color": 0.0,
+                        "_violence_static": 0.0,
+                    }
+                    for frame in batch
+                ]
+
+            def temporal_score(self, _frames: list[np.ndarray]) -> float:
+                return 0.9
+
+        decoded = (
+            (index, index / request.source_fps, frame)
+            for index, frame in enumerate(frames)
+        )
+        with patch.object(worker, "decoded_source_frames", return_value=decoded):
+            observations = worker.exhaustive_scan(
+                request, calibration, FakeModels(), "ffmpeg.exe"
+            )
+        temporal = [
+            value
+            for value in observations
+            if value.category == "blood_gore" and value.end - value.start > 1.0
+        ]
+        self.assertEqual(len(temporal), 1)
+        self.assertGreater(temporal[0].score, 0.85)
+
+    def test_temporal_fusion_does_not_mix_static_evidence_across_frames(self) -> None:
+        request = worker.AnalysisRequest(
+            Path("fixture.mp4"),
+            2.0,
+            8.0,
+            {
+                "adult_nudity": False,
+                "blood_gore": True,
+                "violence_weapons": False,
+            },
+            "balanced",
+        )
+        calibration = {
+            "staticBatchSize": 16,
+            "refineFps": 2.0,
+            "temporalFps": 2.0,
+            "temporalWindowFrames": 4,
+            "temporalStrideFrames": 1,
+            "profiles": {
+                "balanced": {
+                    "triggerThreshold": 0.72,
+                    "bloodContextThreshold": 0.6,
+                    "bloodNsflAssistScale": 0.45,
+                }
+            },
+        }
+        frames = [
+            np.full(
+                (worker.FRAME_SIZE, worker.FRAME_SIZE, 3), index, dtype=np.uint8
+            )
+            for index in range(16)
+        ]
+
+        class FakeModels:
+            blood_calibration = {
+                "temporalEvidenceFloor": 0.18,
+                "temporalMinimumEvidenceFrames": 2,
+            }
+
+            def static_scores(
+                self, batch: list[np.ndarray]
+            ) -> list[dict[str, float]]:
+                return [
+                    {
+                        "adult_nudity": 0.0,
+                        "blood_gore": 0.4 if int(frame[0, 0, 0]) == 2 else 0.0,
+                        "violence_weapons": 0.0,
+                        "_blood_color": (
+                            1.0 if int(frame[0, 0, 0]) in (10, 11) else 0.0
+                        ),
+                        "_violence_static": (
+                            0.9 if int(frame[0, 0, 0]) == 6 else 0.0
+                        ),
+                    }
+                    for frame in batch
+                ]
+
+            def temporal_score(self, _frames: list[np.ndarray]) -> float:
+                return 0.0
+
+        decoded = (
+            (index, index / request.source_fps, frame)
+            for index, frame in enumerate(frames)
+        )
+        with patch.object(worker, "decoded_source_frames", return_value=decoded):
+            observations = worker.exhaustive_scan(
+                request, calibration, FakeModels(), "ffmpeg.exe"
+            )
+        self.assertEqual(observations, [])
+
     def test_observations_require_profile_consecutive_hits(self) -> None:
         request = worker.AnalysisRequest(
             Path("fixture.mp4"),

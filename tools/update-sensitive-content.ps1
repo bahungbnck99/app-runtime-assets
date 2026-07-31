@@ -1,7 +1,7 @@
 param(
   [string]$DefinitionPath = "",
   [string]$QualificationReportPath = "",
-  [string]$RuntimeVersion = "1.0.0-candidate.2",
+  [string]$RuntimeVersion = "1.0.0-candidate.3",
   [switch]$ForceDownload,
   [switch]$PublishManifest,
   [string]$Owner = "bahungbnck99",

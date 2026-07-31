@@ -1,10 +1,12 @@
 {
   "schemaVersion": 1,
-  "calibrationVersion": "1.0.0-candidate.2",
+  "calibrationVersion": "1.0.0-candidate.3",
   "qualificationStatus": "candidate_only",
   "imageSize": 224,
   "coarseFps": 1.0,
   "refineFps": 4.0,
+  "temporalFps": 4.0,
+  "exhaustiveConsecutiveHits": 1,
   "refinePaddingSeconds": 2.0,
   "maxCandidateCoverageRatio": 0.75,
   "maxCandidateRanges": 10000,

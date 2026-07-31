@@ -33,7 +33,7 @@ Build the local candidate:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass `
   -File tools/update-sensitive-content.ps1 `
-  -RuntimeVersion 1.0.0-candidate.2
+  -RuntimeVersion 1.0.0-candidate.3
 ```
 
 Verify the exact ZIP and manifest independently:
