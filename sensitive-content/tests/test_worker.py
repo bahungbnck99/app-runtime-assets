@@ -1,10 +1,15 @@
 from __future__ import annotations
 
+import io
 import json
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
+from unittest.mock import patch
+
+import numpy as np
 
 
 WORKER_DIR = Path(__file__).resolve().parents[1] / "worker"
@@ -14,6 +19,66 @@ import sensitive_content_worker as worker  # noqa: E402
 
 
 class WorkerContractTests(unittest.TestCase):
+    def test_models_only_load_sessions_required_by_enabled_categories(self) -> None:
+        root = Path("runtime")
+        calibration = {"bloodGoreFusion": {"enabled": True}}
+        with patch.object(worker, "session", side_effect=lambda path: path) as load:
+            adult = worker.Models(
+                root,
+                {
+                    "adult_nudity": True,
+                    "blood_gore": False,
+                    "violence_weapons": False,
+                },
+                calibration,
+            )
+        self.assertIsNotNone(adult.safety)
+        self.assertIsNotNone(adult.multi)
+        self.assertIsNone(adult.temporal)
+        self.assertIsNone(adult.blood_calibration)
+        self.assertEqual(load.call_count, 2)
+
+        with patch.object(worker, "session", side_effect=lambda path: path) as load:
+            violence = worker.Models(
+                root,
+                {
+                    "adult_nudity": False,
+                    "blood_gore": False,
+                    "violence_weapons": True,
+                },
+                calibration,
+            )
+        self.assertIsNone(violence.safety)
+        self.assertIsNotNone(violence.multi)
+        self.assertIsNotNone(violence.temporal)
+        self.assertIsNone(violence.blood_calibration)
+        self.assertEqual(load.call_count, 2)
+
+        with patch.object(worker, "session", side_effect=lambda path: path) as load:
+            blood = worker.Models(
+                root,
+                {
+                    "adult_nudity": False,
+                    "blood_gore": True,
+                    "violence_weapons": False,
+                },
+                calibration,
+            )
+        self.assertIsNotNone(blood.safety)
+        self.assertIsNotNone(blood.multi)
+        self.assertIsNotNone(blood.temporal)
+        self.assertEqual(blood.blood_calibration, calibration["bloodGoreFusion"])
+        self.assertEqual(load.call_count, 3)
+
+    def test_emit_replaces_unpaired_surrogates_with_valid_json_text(self) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            worker.emit({"type": "error", "message": "bad\udc90path"})
+        line = output.getvalue()
+        self.assertNotIn(r"\udc90", line)
+        self.assertIn(r"\ufffd", line)
+        self.assertEqual(json.loads(line)["message"], "bad\ufffdpath")
+
     def test_parse_request_is_fail_closed(self) -> None:
         with tempfile.NamedTemporaryFile(suffix=".mp4") as source:
             request = worker.parse_request(
@@ -67,6 +132,104 @@ class WorkerContractTests(unittest.TestCase):
             ),
             [(0.0, 4.0), (7.0, 10.0)],
         )
+
+    def test_blood_color_evidence_requires_localized_and_global_support(self) -> None:
+        calibration = {
+            "redMinimum": 85,
+            "redMaximum": 210,
+            "greenMaximum": 120,
+            "blueMaximum": 120,
+            "redToGreenRatio": 1.4,
+            "redGreenOffset": 8,
+            "redToBlueRatio": 1.22,
+            "redBlueOffset": 6,
+            "redGreenDifference": 35,
+            "localGrid": 7,
+            "activeLocalRatioFloor": 0.02,
+            "maximumActiveLocalCells": 3,
+            "maximumGlobalRatio": 0.006,
+            "globalRatioFloor": 0.0008,
+            "globalRatioFullScale": 0.0025,
+            "localRatioFloor": 0.02,
+            "localRatioFullScale": 0.1,
+            "temporalEvidenceFloor": 0.18,
+            "temporalMinimumEvidenceFrames": 2,
+        }
+        safe = np.full((worker.FRAME_SIZE, worker.FRAME_SIZE, 3), 96, dtype=np.uint8)
+        blood = safe.copy()
+        blood[100:116, 100:116] = np.asarray([145, 28, 38], dtype=np.uint8)
+        yellow = safe.copy()
+        yellow[:, :] = np.asarray([220, 170, 60], dtype=np.uint8)
+        red_title = safe.copy()
+        red_title[64:160, 32:192] = np.asarray([190, 35, 45], dtype=np.uint8)
+        red_lips = safe.copy()
+        red_lips[96:110, 92:112] = np.asarray([175, 45, 55], dtype=np.uint8)
+        red_lips[112:126, 96:116] = np.asarray([175, 45, 55], dtype=np.uint8)
+        self.assertEqual(worker.blood_color_evidence(safe, calibration), 0.0)
+        self.assertGreater(worker.blood_color_evidence(blood, calibration), 0.95)
+        self.assertEqual(worker.blood_color_evidence(yellow, calibration), 0.0)
+        self.assertEqual(worker.blood_color_evidence(red_title, calibration), 0.0)
+        self.assertEqual(worker.blood_color_evidence(red_lips, calibration), 0.0)
+
+    def test_temporal_blood_color_requires_persistent_evidence(self) -> None:
+        calibration = {
+            "temporalEvidenceFloor": 0.18,
+            "temporalMinimumEvidenceFrames": 2,
+        }
+        self.assertEqual(
+            worker.temporal_blood_color_evidence(
+                [0.0, 0.95, 0.0, 0.1], calibration
+            ),
+            0.0,
+        )
+        self.assertEqual(
+            worker.temporal_blood_color_evidence(
+                [0.0, 0.61, 0.83, 0.0], calibration
+            ),
+            0.83,
+        )
+
+    def test_blood_fusion_detects_anime_blood_and_rejects_red_aura(self) -> None:
+        profile = {
+            "bloodCandidateViolenceThreshold": 0.75,
+            "bloodColorCandidateThreshold": 0.75,
+            "bloodContextThreshold": 0.72,
+            "bloodNsflAssistScale": 0.45,
+        }
+        anime_blood = {
+            "blood_gore": 0.0667,
+            "_blood_color": 1.0,
+            "_violence_static": 0.9592,
+        }
+        red_aura = {
+            "blood_gore": 0.0298,
+            "_blood_color": 1.0,
+            "_violence_static": 0.036,
+        }
+        self.assertTrue(worker.blood_candidate_hit(anime_blood, profile, 0.5))
+        self.assertGreater(
+            worker.fused_blood_gore_score(anime_blood, profile), 0.95
+        )
+        self.assertEqual(
+            worker.fused_blood_gore_score(red_aura, profile),
+            red_aura["blood_gore"],
+        )
+
+    def test_temporal_blood_fusion_can_cover_low_nsfl_impact_frames(self) -> None:
+        profile = {
+            "bloodContextThreshold": 0.72,
+            "bloodNsflAssistScale": 0.45,
+        }
+        score = worker.fused_blood_gore_score(
+            {
+                "blood_gore": 0.0,
+                "_blood_color": 1.0,
+                "_violence_static": 0.0,
+            },
+            profile,
+            temporal_context=0.9484,
+        )
+        self.assertGreater(score, 0.95)
 
     def test_ffmpeg_decode_is_video_only_and_memory_streamed(self) -> None:
         command = worker.ffmpeg_decode_command(

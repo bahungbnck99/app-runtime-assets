@@ -6,7 +6,7 @@ on:
       runtime_version:
         description: Runtime version and release tag suffix
         required: true
-        default: 1.0.0-candidate.1
+        default: 1.0.0-candidate.2
       definition_path:
         description: Pinned model source definition in this repository
         required: true

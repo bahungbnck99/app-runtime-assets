@@ -47,8 +47,32 @@ class Observation:
     score: float
 
 
+def configure_protocol_io() -> None:
+    for stream in (sys.stdin, sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            reconfigure(encoding="utf-8", errors="strict")
+
+
+def json_safe(value: Any) -> Any:
+    if isinstance(value, str):
+        return "".join(
+            "\ufffd" if 0xD800 <= ord(character) <= 0xDFFF else character
+            for character in value
+        )
+    if isinstance(value, dict):
+        return {json_safe(key): json_safe(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [json_safe(item) for item in value]
+    if isinstance(value, tuple):
+        return [json_safe(item) for item in value]
+    return value
+
+
 def emit(value: dict[str, Any]) -> None:
-    sys.stdout.write(json.dumps(value, ensure_ascii=True, separators=(",", ":")) + "\n")
+    sys.stdout.write(
+        json.dumps(json_safe(value), ensure_ascii=True, separators=(",", ":")) + "\n"
+    )
     sys.stdout.flush()
 
 
@@ -287,9 +311,129 @@ def softmax(values: np.ndarray) -> np.ndarray:
     return exponent / exponent.sum(axis=-1, keepdims=True)
 
 
+def normalized_evidence(value: float, floor: float, full_scale: float) -> float:
+    if full_scale <= floor:
+        raise WorkerError("Blood-gore evidence calibration is invalid.")
+    return float(np.clip((value - floor) / (full_scale - floor), 0.0, 1.0))
+
+
+def blood_color_evidence(frame: np.ndarray, calibration: dict[str, Any]) -> float:
+    pixels = np.asarray(frame, dtype=np.float32)
+    if pixels.shape != (FRAME_SIZE, FRAME_SIZE, 3):
+        raise WorkerError("Blood-gore color analysis received an invalid frame.")
+    red = pixels[:, :, 0]
+    green = pixels[:, :, 1]
+    blue = pixels[:, :, 2]
+    mask = (
+        (red >= float(calibration["redMinimum"]))
+        & (red <= float(calibration["redMaximum"]))
+        & (green <= float(calibration["greenMaximum"]))
+        & (blue <= float(calibration["blueMaximum"]))
+        & (
+            red
+            >= green * float(calibration["redToGreenRatio"])
+            + float(calibration["redGreenOffset"])
+        )
+        & (
+            red
+            >= blue * float(calibration["redToBlueRatio"])
+            + float(calibration["redBlueOffset"])
+        )
+        & ((red - green) >= float(calibration["redGreenDifference"]))
+    )
+    grid = int(calibration["localGrid"])
+    if grid < 1 or FRAME_SIZE % grid != 0:
+        raise WorkerError("Blood-gore local-grid calibration is invalid.")
+    block = FRAME_SIZE // grid
+    local_ratios = mask.reshape(grid, block, grid, block).mean(axis=(1, 3))
+    local_ratio = float(local_ratios.max())
+    global_ratio = float(mask.mean())
+    active_cells = int(
+        np.count_nonzero(
+            local_ratios >= float(calibration["activeLocalRatioFloor"])
+        )
+    )
+    if (
+        global_ratio > float(calibration["maximumGlobalRatio"])
+        or active_cells > int(calibration["maximumActiveLocalCells"])
+    ):
+        return 0.0
+    global_score = normalized_evidence(
+        global_ratio,
+        float(calibration["globalRatioFloor"]),
+        float(calibration["globalRatioFullScale"]),
+    )
+    local_score = normalized_evidence(
+        local_ratio,
+        float(calibration["localRatioFloor"]),
+        float(calibration["localRatioFullScale"]),
+    )
+    return math.sqrt(global_score * local_score)
+
+
+def temporal_blood_color_evidence(
+    values: Iterable[float], calibration: dict[str, Any]
+) -> float:
+    evidence = [
+        float(value)
+        for value in values
+        if float(value) >= float(calibration["temporalEvidenceFloor"])
+    ]
+    minimum_frames = int(calibration["temporalMinimumEvidenceFrames"])
+    if minimum_frames < 1:
+        raise WorkerError("Blood-gore temporal evidence calibration is invalid.")
+    if len(evidence) < minimum_frames:
+        return 0.0
+    return max(evidence)
+
+
+def blood_candidate_hit(
+    values: dict[str, float],
+    profile: dict[str, Any],
+    generic_threshold: float,
+) -> bool:
+    return (
+        values["blood_gore"] >= generic_threshold
+        or values["_violence_static"]
+        >= float(profile["bloodCandidateViolenceThreshold"])
+        or values["_blood_color"]
+        >= float(profile["bloodColorCandidateThreshold"])
+    )
+
+
+def fused_blood_gore_score(
+    values: dict[str, float],
+    profile: dict[str, Any],
+    temporal_context: float = 0.0,
+) -> float:
+    base = float(values["blood_gore"])
+    context = max(float(values["_violence_static"]), float(temporal_context))
+    if context < float(profile["bloodContextThreshold"]):
+        return base
+    color = float(values["_blood_color"])
+    nsfl_scale = float(profile["bloodNsflAssistScale"])
+    if nsfl_scale <= 0.0:
+        raise WorkerError("Blood-gore NSFL assist calibration is invalid.")
+    nsfl_evidence = min(1.0, base / nsfl_scale)
+    return max(
+        base,
+        math.sqrt(max(0.0, color) * context),
+        math.sqrt(max(0.0, nsfl_evidence) * context),
+    )
+
+
 class Models:
-    def __init__(self, root: Path, categories: dict[str, bool]) -> None:
+    def __init__(
+        self,
+        root: Path,
+        categories: dict[str, bool],
+        calibration: dict[str, Any] | None = None,
+    ) -> None:
         model_root = root / "models"
+        self.blood_enabled = categories["blood_gore"]
+        self.blood_calibration = (
+            calibration["bloodGoreFusion"] if self.blood_enabled and calibration else None
+        )
         self.safety = (
             session(model_root / "image-safety-classifier-xs.onnx")
             if categories["adult_nudity"] or categories["blood_gore"]
@@ -297,14 +441,25 @@ class Models:
         )
         self.multi = (
             session(model_root / "image-multi-detect.onnx")
-            if categories["adult_nudity"] or categories["violence_weapons"]
+            if (
+                categories["adult_nudity"]
+                or categories["blood_gore"]
+                or categories["violence_weapons"]
+            )
             else None
         )
         self.temporal = (
             session(model_root / "aleris-violence-temporal.onnx")
-            if categories["violence_weapons"]
+            if categories["blood_gore"] or categories["violence_weapons"]
             else None
         )
+
+    def blood_color_score(self, frame: np.ndarray) -> float:
+        if not self.blood_enabled:
+            return 0.0
+        if self.blood_calibration is None:
+            raise WorkerError("Blood-gore fusion calibration is unavailable.")
+        return blood_color_evidence(frame, self.blood_calibration)
 
     def static_scores(self, frames: list[np.ndarray]) -> list[dict[str, float]]:
         if not frames:
@@ -347,6 +502,8 @@ class Models:
                     "adult_nudity": float(max(safety[1], multi[0])),
                     "blood_gore": float(safety[0]),
                     "violence_weapons": float(max(multi[1], multi[2])),
+                    "_blood_color": self.blood_color_score(frames[index]),
+                    "_violence_static": float(max(multi[1], multi[2])),
                 }
             )
         return results
@@ -403,6 +560,7 @@ def coarse_scan(
     threshold = float(
         calibration["profiles"][request.sensitivity]["candidateThreshold"]
     )
+    profile = calibration["profiles"][request.sensitivity]
     expected = max(1, int(math.ceil(request.source_duration * fps)))
     frames: list[np.ndarray] = []
     timestamps: list[float] = []
@@ -414,7 +572,12 @@ def coarse_scan(
         scores = models.static_scores(frames)
         for timestamp, values in zip(timestamps, scores, strict=True):
             if any(
-                request.categories[category] and values[category] >= threshold
+                request.categories[category]
+                and (
+                    blood_candidate_hit(values, profile, threshold)
+                    if category == "blood_gore"
+                    else values[category] >= threshold
+                )
                 for category in SUPPORTED_CATEGORIES
             ):
                 candidates.append(
@@ -499,19 +662,27 @@ def refine_scan(
         static_frames: list[np.ndarray] = []
         static_times: list[float] = []
         temporal_frames: deque[np.ndarray] = deque(maxlen=window_size)
+        temporal_blood_colors: deque[float] = deque(maxlen=window_size)
         frame_index = 0
 
         def flush_static() -> None:
             scores = models.static_scores(static_frames)
             for timestamp, values in zip(static_times, scores, strict=True):
                 for category in SUPPORTED_CATEGORIES:
-                    if request.categories[category] and values[category] >= threshold:
+                    if not request.categories[category]:
+                        continue
+                    score = (
+                        fused_blood_gore_score(values, profile)
+                        if category == "blood_gore"
+                        else values[category]
+                    )
+                    if score >= threshold:
                         observations.append(
                             Observation(
                                 timestamp,
                                 min(request.source_duration, timestamp + 1.0 / fps),
                                 category,
-                                values[category],
+                                score,
                             )
                         )
             static_frames.clear()
@@ -523,23 +694,51 @@ def refine_scan(
             static_frames.append(frame)
             static_times.append(timestamp)
             temporal_frames.append(frame)
-            if len(static_frames) >= batch_size:
-                flush_static()
+            temporal_blood_colors.append(models.blood_color_score(frame))
             if (
-                request.categories["violence_weapons"]
+                (
+                    request.categories["blood_gore"]
+                    or request.categories["violence_weapons"]
+                )
                 and len(temporal_frames) == window_size
                 and (frame_index - window_size + 1) % stride == 0
             ):
                 score = models.temporal_score(temporal_frames)
-                if score >= threshold:
+                window_start = max(start, timestamp - (window_size - 1) / fps)
+                window_end = min(request.source_duration, timestamp + 1.0 / fps)
+                if request.categories["violence_weapons"] and score >= threshold:
                     observations.append(
                         Observation(
-                            max(start, timestamp - (window_size - 1) / fps),
-                            min(request.source_duration, timestamp + 1.0 / fps),
+                            window_start,
+                            window_end,
                             "violence_weapons",
                             score,
                         )
                     )
+                if request.categories["blood_gore"]:
+                    blood_score = fused_blood_gore_score(
+                        {
+                            "blood_gore": 0.0,
+                            "_blood_color": temporal_blood_color_evidence(
+                                temporal_blood_colors,
+                                models.blood_calibration,
+                            ),
+                            "_violence_static": 0.0,
+                        },
+                        profile,
+                        temporal_context=score,
+                    )
+                    if blood_score >= threshold:
+                        observations.append(
+                            Observation(
+                                window_start,
+                                window_end,
+                                "blood_gore",
+                                blood_score,
+                            )
+                        )
+            if len(static_frames) >= batch_size:
+                flush_static()
             frame_index += 1
         if static_frames:
             flush_static()
@@ -619,7 +818,7 @@ def analyze(line: str) -> None:
     root = runtime_root()
     calibration = load_calibration(root)
     emit_progress(0.02, "loading_models", "Loading local CPU inference sessions")
-    models = Models(root, request.categories)
+    models = Models(root, request.categories, calibration)
     ffmpeg = resolve_ffmpeg()
     emit_progress(0.06, "coarse_scan", "Scanning source video without audio")
     ranges = coarse_scan(request, calibration, models, ffmpeg)
@@ -642,6 +841,7 @@ def analyze(line: str) -> None:
 
 
 def main() -> int:
+    configure_protocol_io()
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("--health-json", action="store_true")
     parser.add_argument("--analyze-jsonl", action="store_true")

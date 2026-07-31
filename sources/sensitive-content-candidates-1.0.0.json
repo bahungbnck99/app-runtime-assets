@@ -41,7 +41,7 @@
     },
     {
       "id": "image-multi-detect",
-      "role": "adult_nudity_static_violence_and_weapon_image_classifier",
+      "role": "adult_nudity_static_violence_weapon_and_blood_context_image_classifier",
       "repository": "abhi099k/image-multi-detect",
       "revision": "bc2e3ac9e09f12fc9f96187ba3c90a26292d2b52",
       "file": "model.onnx",
@@ -66,7 +66,7 @@
     },
     {
       "id": "aleris-violence-temporal",
-      "role": "violence_temporal_classifier",
+      "role": "violence_and_blood_context_temporal_classifier",
       "repository": "mostafaalazzaly/aleris-violence-detector-x3d-resnet18",
       "revision": "b7682b5495416292e9a9d1ebe051e6865e986ebd",
       "file": "aleris-violence-detector-x3d-resnet18.onnx",

@@ -1,15 +1,16 @@
 {
     "schemaVersion":  1,
     "assetType":  "sensitive-content",
-    "runtimeVersion":  "1.0.0-candidate.1",
+    "runtimeVersion":  "1.0.0-candidate.2",
     "modelBundleVersion":  "1.0.0",
-    "modelBundleHash":  "a21e22a3281ba2242d5393393c66d3c4bb3f3b63e968b38be13fd89e5be39808",
-    "calibrationVersion":  "1.0.0-candidate.1",
+    "modelBundleHash":  "f5e78a8598423fcacb16418782c4692bf3c5ec8db8938e65c38b3e8a54a01c0f",
+    "calibrationVersion":  "1.0.0-candidate.2",
+    "qualificationStatus":  "candidate_only",
     "os":  "windows",
     "arch":  "x86_64",
     "installMode":  "zip",
-    "packUrl":  "https://github.com/bahungbnck99/app-runtime-assets/releases/download/sensitive-content-1.0.0-candidate.1/sensitive-content-windows-x86_64.zip",
-    "packSha256":  "c74144346cddacf3f4cc1782aa867c8383017c0f12c17466dd4a6cad32919c7f",
+    "packUrl":  "https://github.com/bahungbnck99/app-runtime-assets/releases/download/sensitive-content-1.0.0-candidate.2/sensitive-content-windows-x86_64.zip",
+    "packSha256":  "43f6ff17a735de0c2ba730e49110fce95c17149dd77fc5befe261f2c60228b74",
     "workerFile":  "bin/sensitive-content-worker.exe",
     "files":  [
                   {
@@ -289,13 +290,13 @@
                   },
                   {
                       "path":  "bin/sensitive-content-worker.exe",
-                      "bytes":  4758236,
-                      "sha256":  "95856e5ccbcbd218723de3ca58583dc4a029a4a864884b104d27f44f98e174e3"
+                      "bytes":  4766956,
+                      "sha256":  "2fd466a25dc11166f11b8feb078c67e5c99bb2bf763b69564d40863773dd20b9"
                   },
                   {
                       "path":  "config/calibration.json",
-                      "bytes":  1424,
-                      "sha256":  "446fa9b3d53d56816b84f021549834c175366b0dd05a9c217fa6af7c84fa67b0"
+                      "bytes":  2809,
+                      "sha256":  "50e6f471d15b7ee7dba7347c6bae76bb7e868a9f43998355ab1237e007d24c43"
                   },
                   {
                       "path":  "licenses/DATA-PROVENANCE.txt",
@@ -324,13 +325,13 @@
                   },
                   {
                       "path":  "metadata/model-sources.json",
-                      "bytes":  3721,
-                      "sha256":  "bbd9b3f712b6ccc3ca86b528f28a9972eb4a6e4327350d83a204404ac333746c"
+                      "bytes":  3753,
+                      "sha256":  "510124ccf94c34af47e08f7113c34968475dbb35b2961f0a508f6fdf54e7be12"
                   },
                   {
                       "path":  "metadata/qualification.json",
                       "bytes":  1870,
-                      "sha256":  "1259e9e45c2397ae692ad3ad6df01c49d305b7f879e9aa2123fb4ae3a836c186"
+                      "sha256":  "a3a9422faceefb3c03b24f20e2bd678cf517ab31328fa22be376da024070bb1f"
                   },
                   {
                       "path":  "models/aleris-violence-temporal.onnx",
@@ -350,7 +351,7 @@
                   {
                       "path":  "pack.json",
                       "bytes":  482,
-                      "sha256":  "62b1bb5eb922315d012bb91e77f9eca94330949212c82b372bf9d3cd0a2e5c3f"
+                      "sha256":  "ac5c750fde9eb84b6445af286f549964aa03d02c705ef7b51c94071c3c7d3878"
                   }
               ],
     "licenses":  [

@@ -20,6 +20,8 @@ The sensitive-content project provides:
 - an offline JSONL worker using ONNX Runtime CPU;
 - coarse/refine FFmpeg scanning with audio, subtitle and data decode disabled;
 - separate image and temporal inference branches;
+- calibrated blood/gore fusion using NSFL, static/temporal violence context
+  and bounded localized dark-red evidence;
 - bounded progress/result output compatible with DownloadMuliPlatform;
 - pinned model revision, byte-size and SHA-256 definitions;
 - a deterministic archive layout, complete content-hashed file inventory and verifier;
@@ -30,7 +32,8 @@ Build the local candidate:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass `
-  -File tools/update-sensitive-content.ps1
+  -File tools/update-sensitive-content.ps1 `
+  -RuntimeVersion 1.0.0-candidate.2
 ```
 
 Verify the exact ZIP and manifest independently:

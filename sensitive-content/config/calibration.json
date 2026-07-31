@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "calibrationVersion": "1.0.0-candidate.1",
+  "calibrationVersion": "1.0.0-candidate.2",
   "qualificationStatus": "candidate_only",
   "imageSize": 224,
   "coarseFps": 1.0,
@@ -17,20 +17,53 @@
       "candidateThreshold": 0.25,
       "triggerThreshold": 0.55,
       "strongThreshold": 0.9,
-      "consecutiveHits": 1
+      "consecutiveHits": 1,
+      "bloodCandidateViolenceThreshold": 0.4,
+      "bloodColorCandidateThreshold": 0.45,
+      "bloodContextThreshold": 0.45,
+      "bloodNsflAssistScale": 0.45
     },
     "balanced": {
       "candidateThreshold": 0.35,
       "triggerThreshold": 0.72,
       "strongThreshold": 0.92,
-      "consecutiveHits": 2
+      "consecutiveHits": 2,
+      "bloodCandidateViolenceThreshold": 0.6,
+      "bloodColorCandidateThreshold": 0.6,
+      "bloodContextThreshold": 0.6,
+      "bloodNsflAssistScale": 0.45
     },
     "low_false_positive": {
       "candidateThreshold": 0.5,
       "triggerThreshold": 0.85,
       "strongThreshold": 0.95,
-      "consecutiveHits": 3
+      "consecutiveHits": 3,
+      "bloodCandidateViolenceThreshold": 0.75,
+      "bloodColorCandidateThreshold": 0.75,
+      "bloodContextThreshold": 0.72,
+      "bloodNsflAssistScale": 0.45
     }
+  },
+  "bloodGoreFusion": {
+    "redMinimum": 85,
+    "redMaximum": 210,
+    "greenMaximum": 120,
+    "blueMaximum": 120,
+    "redToGreenRatio": 1.4,
+    "redGreenOffset": 8,
+    "redToBlueRatio": 1.22,
+    "redBlueOffset": 6,
+    "redGreenDifference": 35,
+    "localGrid": 7,
+    "activeLocalRatioFloor": 0.02,
+    "maximumActiveLocalCells": 3,
+    "maximumGlobalRatio": 0.006,
+    "globalRatioFloor": 0.0008,
+    "globalRatioFullScale": 0.0025,
+    "localRatioFloor": 0.02,
+    "localRatioFullScale": 0.1,
+    "temporalEvidenceFloor": 0.18,
+    "temporalMinimumEvidenceFrames": 2
   },
   "fusion": {
     "adult_nudity": [
@@ -38,7 +71,11 @@
       {"model": "image-multi-detect", "label": "nsfw", "weight": 1.0}
     ],
     "blood_gore": [
-      {"model": "image-safety-classifier-xs", "label": "NSFL", "weight": 1.0}
+      {"model": "image-safety-classifier-xs", "label": "NSFL", "weight": 1.0},
+      {"model": "image-multi-detect", "label": "violence", "weight": 1.0},
+      {"model": "image-multi-detect", "label": "weapon", "weight": 1.0},
+      {"model": "aleris-violence-temporal", "label": "violent", "weight": 1.0},
+      {"model": "blood-color-evidence", "label": "localized_dark_red", "weight": 1.0}
     ],
     "violence_weapons": [
       {"model": "image-multi-detect", "label": "violence", "weight": 1.0},

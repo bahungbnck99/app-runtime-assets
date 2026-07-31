@@ -1,7 +1,7 @@
 param(
   [string]$DefinitionPath = "",
   [string]$QualificationReportPath = "",
-  [string]$RuntimeVersion = "1.0.0-candidate.1",
+  [string]$RuntimeVersion = "1.0.0-candidate.2",
   [switch]$ForceDownload,
   [switch]$PublishManifest,
   [string]$Owner = "bahungbnck99",
@@ -427,6 +427,7 @@ $manifest = [ordered]@{
   modelBundleVersion = [string]$definition.bundleVersion
   modelBundleHash = $modelBundleHash
   calibrationVersion = [string](Get-Content -LiteralPath $calibrationSource -Raw | ConvertFrom-Json).calibrationVersion
+  qualificationStatus = if ($PublishManifest) { "production_qualified" } else { "candidate_only" }
   os = "windows"
   arch = "x86_64"
   installMode = "zip"
