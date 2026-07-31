@@ -163,6 +163,27 @@ def resolve_ffmpeg() -> str:
     )
 
 
+def cpu_inference_threads() -> int:
+    cpu_count = max(1, os.cpu_count() or 1)
+    configured = os.environ.get("SENSITIVE_CONTENT_CPU_THREADS", "").strip()
+    if configured:
+        try:
+            value = int(configured)
+        except ValueError as error:
+            raise WorkerError(
+                "SENSITIVE_CONTENT_CPU_THREADS must be an integer."
+            ) from error
+        if value < 1 or value > min(16, cpu_count):
+            raise WorkerError(
+                "SENSITIVE_CONTENT_CPU_THREADS is outside its supported range."
+            )
+        return value
+    # Leave capacity for decoding and the desktop UI. Physical-core scale is a
+    # better CPU default for ONNX convolution workloads than a fixed four-thread
+    # cap or consuming every logical processor.
+    return max(1, min(8, (cpu_count + 1) // 2))
+
+
 def session(path: Path) -> ort.InferenceSession:
     if not path.is_file():
         raise WorkerError(f"Required model is unavailable: {path.name}")
@@ -170,8 +191,7 @@ def session(path: Path) -> ort.InferenceSession:
     options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
     options.enable_mem_pattern = True
     options.log_severity_level = 3
-    cpu_count = max(1, os.cpu_count() or 1)
-    options.intra_op_num_threads = max(1, min(4, cpu_count))
+    options.intra_op_num_threads = cpu_inference_threads()
     options.inter_op_num_threads = 1
     try:
         return ort.InferenceSession(
@@ -879,7 +899,11 @@ def exhaustive_scan(
         request.categories["blood_gore"]
         or request.categories["violence_weapons"]
     )
-    observations: list[Observation] = []
+    # Static inference runs for every decoded frame. Keep at most one observation
+    # per source frame/category so overlapping temporal windows cannot inflate the
+    # hit count or widen a segment beyond the frames that supplied the evidence.
+    localized_observations: dict[tuple[str, int], Observation] = {}
+    interval_observations: list[Observation] = []
     static_frames: list[np.ndarray] = []
     static_times: list[float] = []
     temporal_frames: deque[np.ndarray] = deque(maxlen=window_size)
@@ -890,6 +914,24 @@ def exhaustive_scan(
     temporal_sample_index = 0
     last_temporal_window_sample = -1
     processed_frames = 0
+
+    def record_frame_observation(
+        timestamp: float, category: str, score: float
+    ) -> None:
+        source_frame = max(
+            0,
+            min(expected_frames - 1, int(round(timestamp * request.source_fps))),
+        )
+        key = (category, source_frame)
+        observation = Observation(
+            max(0.0, timestamp),
+            min(request.source_duration, timestamp + frame_duration),
+            category,
+            score,
+        )
+        previous = localized_observations.get(key)
+        if previous is None or observation.score > previous.score:
+            localized_observations[key] = observation
 
     def emit_temporal_window(pad_short_window: bool = False) -> None:
         nonlocal last_temporal_window_sample
@@ -912,15 +954,18 @@ def exhaustive_scan(
         # Temporal inference is sampled for speed, but evidence fusion must include
         # every source frame in the same time window. Otherwise a short NSFL hit
         # between two temporal samples can still be lost.
-        evidence_scores = [
-            values
+        evidence_frames = [
+            (timestamp, values)
             for timestamp, values in full_rate_scores
             if timestamp + frame_duration >= window_start and timestamp <= window_end
         ]
-        if not evidence_scores:
+        if evidence_frames:
+            evidence_scores = [values for _timestamp, values in evidence_frames]
+        else:
+            evidence_frames = list(zip(temporal_times, scores, strict=True))
             evidence_scores = scores
         if request.categories["violence_weapons"] and temporal_score >= threshold:
-            observations.append(
+            interval_observations.append(
                 Observation(
                     window_start,
                     window_end,
@@ -933,14 +978,14 @@ def exhaustive_scan(
                 (value["_blood_color"] for value in evidence_scores),
                 models.blood_calibration,
             )
-            # Keep evidence from every frame, but do not combine unrelated maxima
-            # from different frames (for example red lips plus a nearby action cut).
-            blood_score = max(
-                fused_blood_gore_score(
+            # Temporal inference validates the scene context, but the treatment
+            # boundary must stay on the exact source frames that supplied blood
+            # evidence. Returning the whole temporal window makes normal frames
+            # before/after a blood hit incorrectly inherit the effect.
+            for timestamp, value in evidence_frames:
+                blood_score = fused_blood_gore_score(
                     {
                         "blood_gore": value["blood_gore"],
-                        # Persistence validates color evidence; it does not move
-                        # that evidence onto a different high-violence frame.
                         "_blood_color": (
                             value["_blood_color"] if temporal_color > 0.0 else 0.0
                         ),
@@ -949,17 +994,8 @@ def exhaustive_scan(
                     profile,
                     temporal_context=temporal_score,
                 )
-                for value in evidence_scores
-            )
-            if blood_score >= threshold:
-                observations.append(
-                    Observation(
-                        window_start,
-                        window_end,
-                        "blood_gore",
-                        blood_score,
-                    )
-                )
+                if blood_score >= threshold:
+                    record_frame_observation(timestamp, "blood_gore", blood_score)
         last_temporal_window_sample = temporal_sample_index - 1
 
     def append_temporal(
@@ -1004,14 +1040,7 @@ def exhaustive_scan(
                     else values[category]
                 )
                 if score >= threshold:
-                    observations.append(
-                        Observation(
-                            timestamp,
-                            min(request.source_duration, timestamp + frame_duration),
-                            category,
-                            score,
-                        )
-                    )
+                    record_frame_observation(timestamp, category, score)
             append_temporal(timestamp, frame, values)
         processed_frames += len(static_frames)
         static_frames.clear()
@@ -1040,7 +1069,10 @@ def exhaustive_scan(
         final_sample = temporal_sample_index - 1
         if last_temporal_window_sample < final_sample:
             emit_temporal_window(pad_short_window=True)
-    return observations
+    return sorted(
+        [*localized_observations.values(), *interval_observations],
+        key=lambda value: (value.start, value.end, value.category),
+    )
 
 
 def observations_to_segments(

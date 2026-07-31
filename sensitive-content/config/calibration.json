@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "calibrationVersion": "1.0.0-candidate.3",
+  "calibrationVersion": "1.0.0-candidate.4",
   "qualificationStatus": "candidate_only",
   "imageSize": 224,
   "coarseFps": 1.0,

@@ -1,16 +1,16 @@
 {
     "schemaVersion":  1,
     "assetType":  "sensitive-content",
-    "runtimeVersion":  "1.0.0-candidate.3",
+    "runtimeVersion":  "1.0.0-candidate.4",
     "modelBundleVersion":  "1.0.0",
-    "modelBundleHash":  "430709bbda9ac0f605a41da085c52c0aeac02a2a4d1cec825f2b74a106493d23",
-    "calibrationVersion":  "1.0.0-candidate.3",
+    "modelBundleHash":  "6b0acaa70de975ca82c02b0e2ad071567a13c4fad4f978302458009c5c00466e",
+    "calibrationVersion":  "1.0.0-candidate.4",
     "qualificationStatus":  "candidate_only",
     "os":  "windows",
     "arch":  "x86_64",
     "installMode":  "zip",
-    "packUrl":  "https://github.com/bahungbnck99/app-runtime-assets/releases/download/sensitive-content-1.0.0-candidate.3/sensitive-content-windows-x86_64.zip",
-    "packSha256":  "455e604c9ad95f4dd1ac890f4a307f8956b5b5193f76e16263117c72a357e7d1",
+    "packUrl":  "https://github.com/bahungbnck99/app-runtime-assets/releases/download/sensitive-content-1.0.0-candidate.4/sensitive-content-windows-x86_64.zip",
+    "packSha256":  "813e1dcfd5c0402f0209b7458bf296c4fcc3516ba12ff3e8f6018b5c0d71d735",
     "workerFile":  "bin/sensitive-content-worker.exe",
     "files":  [
                   {
@@ -290,13 +290,13 @@
                   },
                   {
                       "path":  "bin/sensitive-content-worker.exe",
-                      "bytes":  4777077,
-                      "sha256":  "144b84297723a9a525350d1a2d5318b83c0514dc4800e9d13a872ee7c3189fec"
+                      "bytes":  4778890,
+                      "sha256":  "297a4486d5aa107a191a512434ad0d83ee0270a0f205d4b2737d339bb5f0f722"
                   },
                   {
                       "path":  "config/calibration.json",
                       "bytes":  2865,
-                      "sha256":  "9117ee331dcf2ac95a09b67c62471ea4075f2c3c29c34be36e2ba964749f5ef5"
+                      "sha256":  "418e1e12ff8aca1df261048f5464d3ec0c81fbc7a602470d4af3355f1b49a4b4"
                   },
                   {
                       "path":  "licenses/DATA-PROVENANCE.txt",
@@ -331,7 +331,7 @@
                   {
                       "path":  "metadata/qualification.json",
                       "bytes":  1870,
-                      "sha256":  "b77dd5255bc9593594e3313b358f46a38c92183228cc74cd109010ae2bffca6f"
+                      "sha256":  "e9fb3d49e8aeea6b71c20c77860d05d5629332c5bba735aef3d8ed6eb5d56bd6"
                   },
                   {
                       "path":  "models/aleris-violence-temporal.onnx",
@@ -351,7 +351,7 @@
                   {
                       "path":  "pack.json",
                       "bytes":  482,
-                      "sha256":  "b46f8050b887474b1ea16a08f2c924a86b9b7c5e4e6fdb8064c41572467eb3fa"
+                      "sha256":  "741ac27fcf5be767109cdaf7f5793aec1bb6351c8267c627f81b4e547967081b"
                   }
               ],
     "licenses":  [

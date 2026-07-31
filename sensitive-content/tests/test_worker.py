@@ -19,6 +19,24 @@ import sensitive_content_worker as worker  # noqa: E402
 
 
 class WorkerContractTests(unittest.TestCase):
+    def test_cpu_threads_scale_to_physical_core_estimate_and_validate_override(self) -> None:
+        with (
+            patch.object(worker.os, "cpu_count", return_value=12),
+            patch.dict(worker.os.environ, {"SENSITIVE_CONTENT_CPU_THREADS": ""}),
+        ):
+            self.assertEqual(worker.cpu_inference_threads(), 6)
+        with (
+            patch.object(worker.os, "cpu_count", return_value=12),
+            patch.dict(worker.os.environ, {"SENSITIVE_CONTENT_CPU_THREADS": "8"}),
+        ):
+            self.assertEqual(worker.cpu_inference_threads(), 8)
+        with (
+            patch.object(worker.os, "cpu_count", return_value=4),
+            patch.dict(worker.os.environ, {"SENSITIVE_CONTENT_CPU_THREADS": "8"}),
+        ):
+            with self.assertRaises(worker.WorkerError):
+                worker.cpu_inference_threads()
+
     def test_models_only_load_sessions_required_by_enabled_categories(self) -> None:
         root = Path("runtime")
         calibration = {"bloodGoreFusion": {"enabled": True}}
@@ -351,7 +369,7 @@ class WorkerContractTests(unittest.TestCase):
         self.assertEqual(len(segments), 1)
         self.assertEqual(segments[0]["sourceStart"], 7.0)
 
-    def test_temporal_fusion_keeps_evidence_between_temporal_samples(self) -> None:
+    def test_temporal_fusion_localizes_evidence_between_temporal_samples(self) -> None:
         request = worker.AnalysisRequest(
             Path("fixture.mp4"),
             2.0,
@@ -416,13 +434,83 @@ class WorkerContractTests(unittest.TestCase):
             observations = worker.exhaustive_scan(
                 request, calibration, FakeModels(), "ffmpeg.exe"
             )
-        temporal = [
-            value
-            for value in observations
-            if value.category == "blood_gore" and value.end - value.start > 1.0
+        blood = [
+            value for value in observations if value.category == "blood_gore"
         ]
-        self.assertEqual(len(temporal), 1)
-        self.assertGreater(temporal[0].score, 0.85)
+        self.assertEqual(len(blood), 1)
+        self.assertEqual(blood[0].start, 2 / request.source_fps)
+        self.assertEqual(blood[0].end, 3 / request.source_fps)
+        self.assertGreater(blood[0].score, 0.85)
+
+    def test_overlapping_temporal_windows_do_not_duplicate_a_source_frame(self) -> None:
+        request = worker.AnalysisRequest(
+            Path("fixture.mp4"),
+            3.0,
+            8.0,
+            {
+                "adult_nudity": False,
+                "blood_gore": True,
+                "violence_weapons": False,
+            },
+            "balanced",
+        )
+        calibration = {
+            "staticBatchSize": 24,
+            "refineFps": 2.0,
+            "temporalFps": 2.0,
+            "temporalWindowFrames": 4,
+            "temporalStrideFrames": 1,
+            "profiles": {
+                "balanced": {
+                    "triggerThreshold": 0.72,
+                    "bloodContextThreshold": 0.6,
+                    "bloodNsflAssistScale": 0.45,
+                }
+            },
+        }
+        frames = [
+            np.full(
+                (worker.FRAME_SIZE, worker.FRAME_SIZE, 3), index, dtype=np.uint8
+            )
+            for index in range(24)
+        ]
+
+        class FakeModels:
+            blood_calibration = {
+                "temporalEvidenceFloor": 0.18,
+                "temporalMinimumEvidenceFrames": 2,
+            }
+
+            def static_scores(
+                self, batch: list[np.ndarray]
+            ) -> list[dict[str, float]]:
+                return [
+                    {
+                        "adult_nudity": 0.0,
+                        "blood_gore": 0.4 if int(frame[0, 0, 0]) == 10 else 0.0,
+                        "violence_weapons": 0.0,
+                        "_blood_color": 0.0,
+                        "_violence_static": 0.0,
+                    }
+                    for frame in batch
+                ]
+
+            def temporal_score(self, _frames: list[np.ndarray]) -> float:
+                return 0.9
+
+        decoded = (
+            (index, index / request.source_fps, frame)
+            for index, frame in enumerate(frames)
+        )
+        with patch.object(worker, "decoded_source_frames", return_value=decoded):
+            observations = worker.exhaustive_scan(
+                request, calibration, FakeModels(), "ffmpeg.exe"
+            )
+        blood = [
+            value for value in observations if value.category == "blood_gore"
+        ]
+        self.assertEqual(len(blood), 1)
+        self.assertEqual(blood[0].start, 10 / request.source_fps)
 
     def test_temporal_fusion_does_not_mix_static_evidence_across_frames(self) -> None:
         request = worker.AnalysisRequest(
