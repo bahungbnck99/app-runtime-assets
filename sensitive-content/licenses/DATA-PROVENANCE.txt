@@ -3,7 +3,7 @@ Sensitive-content data provenance decision
 
 Status: BLOCKED FOR PRODUCTION RELEASE
 
-The candidate image and temporal model cards do not provide a complete,
+The candidate image, anime-tagging and temporal model cards do not provide a complete,
 auditable inventory of training data rights for the target commercial use.
 The repository also does not contain a rights-cleared cross-domain
 qualification set covering live action, animation/game, medical, news and
@@ -16,5 +16,5 @@ report records:
 - a rights-cleared model and dataset decision;
 - per-domain segment precision/recall and false-positive/false-negative data;
 - calibrated sensitive, balanced and low-false-positive profiles;
-- CPU qualification and any advertised GPU qualification;
+- CPU qualification and DirectML GPU qualification, including automatic CPU fallback;
 - long-video, cancellation, corruption and memory/VRAM soak results.

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bundleId": "sensitive-content-candidates",
-  "bundleVersion": "1.0.0",
+  "bundleVersion": "1.1.0",
   "builder": {
     "os": "windows",
     "arch": "x86_64",
@@ -12,7 +12,8 @@
   "releaseBlockers": [
     "No repository-owned, rights-cleared cross-domain qualification dataset is available.",
     "The upstream model cards do not provide sufficient training-data rights evidence for a commercial production decision.",
-    "The three sensitivity profiles have not been calibrated on the application's target domains."
+    "The three sensitivity profiles have not been calibrated on the application's target domains.",
+    "The anime tagger and its label vocabulary are candidate-only until cross-domain false-positive qualification is complete."
   ],
   "models": [
     {
@@ -88,6 +89,44 @@
         "labels": ["non_violent", "violent"],
         "activation": "softmax"
       }
+    },
+    {
+      "id": "ml-danbooru-anime-tagger",
+      "role": "anime_blood_wound_and_gore_multilabel_classifier",
+      "repository": "deepghs/ml-danbooru-onnx",
+      "revision": "eb9058324a741f1b90d4db168f6e1d6b6cb7e63d",
+      "file": "TResnet-D-FLq_ema_6-30000.onnx",
+      "packPath": "models/anime-blood-tagger.onnx",
+      "url": "https://huggingface.co/deepghs/ml-danbooru-onnx/resolve/eb9058324a741f1b90d4db168f6e1d6b6cb7e63d/TResnet-D-FLq_ema_6-30000.onnx?download=true",
+      "bytes": 235546500,
+      "sha256": "594c26e2cb72637c343f0492ba9d76b642e751201bcf61ff43f02ddeab3abcb9",
+      "declaredLicense": "MIT",
+      "input": {
+        "name": "input",
+        "shape": ["batch", 3, "height", "width"],
+        "dtype": "float32",
+        "rgbRange": [0, 1]
+      },
+      "output": {
+        "name": "output",
+        "labelCount": 12547,
+        "activation": "sigmoid",
+        "bloodFusion": "blood plus explicit location, wound and bleeding tags"
+      }
+    },
+    {
+      "id": "ml-danbooru-anime-tags",
+      "role": "label_vocabulary_for_ml_danbooru_anime_tagger",
+      "repository": "deepghs/ml-danbooru-onnx",
+      "revision": "eb9058324a741f1b90d4db168f6e1d6b6cb7e63d",
+      "file": "tags.csv",
+      "packPath": "models/ml-danbooru-tags.csv",
+      "url": "https://huggingface.co/deepghs/ml-danbooru-onnx/resolve/eb9058324a741f1b90d4db168f6e1d6b6cb7e63d/tags.csv?download=true",
+      "bytes": 368541,
+      "sha256": "59e337ca4cef6bf9571ea65e4281f3798433ba8c00a3ab8f660c7d8f4f5e57a2",
+      "declaredLicense": "MIT",
+      "format": "CSV",
+      "rows": 12547
     }
   ]
 }

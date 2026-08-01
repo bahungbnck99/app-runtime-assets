@@ -40,7 +40,7 @@ class WorkerContractTests(unittest.TestCase):
     def test_models_only_load_sessions_required_by_enabled_categories(self) -> None:
         root = Path("runtime")
         calibration = {"bloodGoreFusion": {"enabled": True}}
-        with patch.object(worker, "session", side_effect=lambda path: path) as load:
+        with patch.object(worker, "session", side_effect=lambda path, _backend: path) as load:
             adult = worker.Models(
                 root,
                 {
@@ -56,7 +56,7 @@ class WorkerContractTests(unittest.TestCase):
         self.assertIsNone(adult.blood_calibration)
         self.assertEqual(load.call_count, 2)
 
-        with patch.object(worker, "session", side_effect=lambda path: path) as load:
+        with patch.object(worker, "session", side_effect=lambda path, _backend: path) as load:
             violence = worker.Models(
                 root,
                 {
@@ -72,7 +72,12 @@ class WorkerContractTests(unittest.TestCase):
         self.assertIsNone(violence.blood_calibration)
         self.assertEqual(load.call_count, 2)
 
-        with patch.object(worker, "session", side_effect=lambda path: path) as load:
+        with (
+            patch.object(worker, "session", side_effect=lambda path, _backend: path) as load,
+            patch.object(
+                worker, "load_anime_blood_tag_indices", return_value=(0, (1,))
+            ),
+        ):
             blood = worker.Models(
                 root,
                 {
@@ -85,8 +90,39 @@ class WorkerContractTests(unittest.TestCase):
         self.assertIsNotNone(blood.safety)
         self.assertIsNotNone(blood.multi)
         self.assertIsNotNone(blood.temporal)
+        self.assertIsNotNone(blood.anime)
         self.assertEqual(blood.blood_calibration, calibration["bloodGoreFusion"])
-        self.assertEqual(load.call_count, 3)
+        self.assertEqual(load.call_count, 4)
+
+    def test_backend_prefers_directml_and_honors_cpu_override(self) -> None:
+        with (
+            patch.object(
+                worker.ort,
+                "get_available_providers",
+                return_value=["DmlExecutionProvider", "CPUExecutionProvider"],
+            ),
+            patch.dict(
+                worker.os.environ,
+                {"SENSITIVE_CONTENT_EXECUTION_PROVIDER": "auto"},
+            ),
+        ):
+            backend = worker.InferenceBackend()
+            self.assertEqual(backend.active_provider, "directml")
+            options = backend.options("directml")
+            self.assertFalse(options.enable_mem_pattern)
+            self.assertEqual(options.execution_mode, worker.ort.ExecutionMode.ORT_SEQUENTIAL)
+        with (
+            patch.object(
+                worker.ort,
+                "get_available_providers",
+                return_value=["DmlExecutionProvider", "CPUExecutionProvider"],
+            ),
+            patch.dict(
+                worker.os.environ,
+                {"SENSITIVE_CONTENT_EXECUTION_PROVIDER": "cpu"},
+            ),
+        ):
+            self.assertEqual(worker.InferenceBackend().active_provider, "cpu")
 
     def test_emit_replaces_unpaired_surrogates_with_valid_json_text(self) -> None:
         output = io.StringIO()
@@ -233,6 +269,35 @@ class WorkerContractTests(unittest.TestCase):
             red_aura["blood_gore"],
         )
 
+    def test_anime_blood_uses_its_own_threshold_without_lowering_general_threshold(self) -> None:
+        profile = {
+            "bloodContextThreshold": 0.6,
+            "bloodNsflAssistScale": 0.45,
+            "animeBloodTriggerThreshold": 0.8,
+            "animeBloodCandidateNsflThreshold": 0.02,
+            "animeBloodCandidateColorThreshold": 0.08,
+            "animeBloodCandidateViolenceThreshold": 0.12,
+            "animeBloodCandidateTemporalThreshold": 0.45,
+        }
+        target = {
+            "blood_gore": 0.039,
+            "_blood_color": 0.264,
+            "_violence_static": 0.243,
+            "_anime_blood": 0.94,
+        }
+        ordinary = {
+            "blood_gore": 0.02,
+            "_blood_color": 0.0,
+            "_violence_static": 0.0,
+            "_anime_blood": 0.61,
+        }
+        self.assertTrue(worker.anime_blood_candidate_hit(target, profile))
+        self.assertEqual(worker.fused_blood_gore_score(target, profile), 0.94)
+        self.assertEqual(
+            worker.fused_blood_gore_score(ordinary, profile),
+            ordinary["blood_gore"],
+        )
+
     def test_temporal_blood_fusion_can_cover_low_nsfl_impact_frames(self) -> None:
         profile = {
             "bloodContextThreshold": 0.72,
@@ -324,6 +389,9 @@ class WorkerContractTests(unittest.TestCase):
                         }
                     )
                 return values
+
+            def enrich_anime_blood(self, *_args: object, **_kwargs: object) -> None:
+                return None
 
         models = FakeModels()
         decoded = (
@@ -426,6 +494,9 @@ class WorkerContractTests(unittest.TestCase):
             def temporal_score(self, _frames: list[np.ndarray]) -> float:
                 return 0.9
 
+            def enrich_anime_blood(self, *_args: object, **_kwargs: object) -> None:
+                return None
+
         decoded = (
             (index, index / request.source_fps, frame)
             for index, frame in enumerate(frames)
@@ -497,6 +568,9 @@ class WorkerContractTests(unittest.TestCase):
 
             def temporal_score(self, _frames: list[np.ndarray]) -> float:
                 return 0.9
+
+            def enrich_anime_blood(self, *_args: object, **_kwargs: object) -> None:
+                return None
 
         decoded = (
             (index, index / request.source_fps, frame)
@@ -571,6 +645,9 @@ class WorkerContractTests(unittest.TestCase):
 
             def temporal_score(self, _frames: list[np.ndarray]) -> float:
                 return 0.0
+
+            def enrich_anime_blood(self, *_args: object, **_kwargs: object) -> None:
+                return None
 
         decoded = (
             (index, index / request.source_fps, frame)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import math
 import os
@@ -24,6 +25,23 @@ FRAME_SIZE = 224
 FRAME_BYTES = FRAME_SIZE * FRAME_SIZE * 3
 MAX_STDERR_BYTES = 256 * 1024
 CREATE_NO_WINDOW = 0x08000000 if os.name == "nt" else 0
+ANIME_TAG_COUNT = 12547
+ANIME_BLOOD_PRIMARY_TAGS = (
+    "blood_on_face",
+    "blood_on_clothes",
+    "blood_splatter",
+    "blood_from_mouth",
+    "blood_on_hands",
+    "blood_on_weapon",
+    "blood_trail",
+    "blood_drip",
+    "blood_stain",
+    "bleeding",
+    "deep_wound",
+    "pool_of_blood",
+    "coughing_blood",
+    "spitting_blood",
+)
 
 
 class WorkerError(RuntimeError):
@@ -184,23 +202,115 @@ def cpu_inference_threads() -> int:
     return max(1, min(8, (cpu_count + 1) // 2))
 
 
-def session(path: Path) -> ort.InferenceSession:
-    if not path.is_file():
-        raise WorkerError(f"Required model is unavailable: {path.name}")
-    options = ort.SessionOptions()
-    options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
-    options.enable_mem_pattern = True
-    options.log_severity_level = 3
-    options.intra_op_num_threads = cpu_inference_threads()
-    options.inter_op_num_threads = 1
-    try:
+class InferenceBackend:
+    """Prefer DirectML on Windows and fail over every session to CPU safely."""
+
+    def __init__(self) -> None:
+        requested = os.environ.get(
+            "SENSITIVE_CONTENT_EXECUTION_PROVIDER", "auto"
+        ).strip().lower()
+        if requested not in ("auto", "cpu", "directml"):
+            raise WorkerError(
+                "SENSITIVE_CONTENT_EXECUTION_PROVIDER must be auto, cpu or directml."
+            )
+        available = set(ort.get_available_providers())
+        self.available_providers = tuple(sorted(available))
+        self.active_provider = (
+            "directml"
+            if requested != "cpu" and "DmlExecutionProvider" in available
+            else "cpu"
+        )
+        self.fallback_reason: str | None = None
+
+    def options(self, provider: str) -> ort.SessionOptions:
+        options = ort.SessionOptions()
+        options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+        options.log_severity_level = 3
+        options.inter_op_num_threads = 1
+        if provider == "directml":
+            # Required by the DirectML execution-provider contract.
+            options.enable_mem_pattern = False
+            options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
+        else:
+            options.enable_mem_pattern = True
+            options.intra_op_num_threads = cpu_inference_threads()
+        return options
+
+    def raw_session(self, path: Path, provider: str) -> ort.InferenceSession:
+        providers = (
+            ["DmlExecutionProvider", "CPUExecutionProvider"]
+            if provider == "directml"
+            else ["CPUExecutionProvider"]
+        )
         return ort.InferenceSession(
             str(path),
-            sess_options=options,
-            providers=["CPUExecutionProvider"],
+            sess_options=self.options(provider),
+            providers=providers,
         )
-    except Exception as error:
-        raise WorkerError(f"Could not load model {path.name}: {error}") from error
+
+    def fallback_to_cpu(self, error: BaseException) -> None:
+        self.active_provider = "cpu"
+        self.fallback_reason = str(error)[:1024]
+
+    @property
+    def display_name(self) -> str:
+        return "GPU (DirectML)" if self.active_provider == "directml" else "CPU"
+
+
+class ManagedSession:
+    def __init__(self, backend: InferenceBackend, path: Path) -> None:
+        if not path.is_file():
+            raise WorkerError(f"Required model is unavailable: {path.name}")
+        self.backend = backend
+        self.path = path
+        self.provider = backend.active_provider
+        try:
+            self.value = backend.raw_session(path, self.provider)
+        except Exception as error:
+            if self.provider != "directml":
+                raise WorkerError(f"Could not load model {path.name}: {error}") from error
+            backend.fallback_to_cpu(error)
+            self.provider = "cpu"
+            try:
+                self.value = backend.raw_session(path, "cpu")
+            except Exception as cpu_error:
+                raise WorkerError(
+                    f"Could not load model {path.name} with DirectML or CPU: {cpu_error}"
+                ) from cpu_error
+
+    def ensure_current_provider(self) -> None:
+        if self.provider == self.backend.active_provider:
+            return
+        self.provider = self.backend.active_provider
+        self.value = self.backend.raw_session(self.path, self.provider)
+
+    def get_inputs(self) -> list[Any]:
+        return self.value.get_inputs()
+
+    def run(self, output_names: Any, input_feed: dict[str, np.ndarray]) -> Any:
+        self.ensure_current_provider()
+        try:
+            return self.value.run(output_names, input_feed)
+        except Exception as error:
+            if self.provider != "directml":
+                raise WorkerError(
+                    f"Inference failed for model {self.path.name}: {error}"
+                ) from error
+            self.backend.fallback_to_cpu(error)
+            self.provider = "cpu"
+            try:
+                self.value = self.backend.raw_session(self.path, "cpu")
+                return self.value.run(output_names, input_feed)
+            except Exception as cpu_error:
+                raise WorkerError(
+                    f"Inference failed for model {self.path.name} with DirectML and CPU: {cpu_error}"
+                ) from cpu_error
+
+
+def session(path: Path, backend: InferenceBackend | None = None) -> ManagedSession:
+    if not path.is_file():
+        raise WorkerError(f"Required model is unavailable: {path.name}")
+    return ManagedSession(backend or InferenceBackend(), path)
 
 
 def read_exact(stream: Any, size: int) -> bytes:
@@ -514,9 +624,12 @@ def fused_blood_gore_score(
     temporal_context: float = 0.0,
 ) -> float:
     base = float(values["blood_gore"])
+    anime = max(0.0, float(values.get("_anime_blood", 0.0)))
+    anime_threshold = float(profile.get("animeBloodTriggerThreshold", 1.0))
+    anime_evidence = anime if anime >= anime_threshold else 0.0
     context = max(float(values["_violence_static"]), float(temporal_context))
     if context < float(profile["bloodContextThreshold"]):
-        return base
+        return max(base, anime_evidence)
     color = float(values["_blood_color"])
     nsfl_scale = float(profile["bloodNsflAssistScale"])
     if nsfl_scale <= 0.0:
@@ -524,8 +637,48 @@ def fused_blood_gore_score(
     nsfl_evidence = min(1.0, base / nsfl_scale)
     return max(
         base,
+        anime_evidence,
         math.sqrt(max(0.0, color) * context),
         math.sqrt(max(0.0, nsfl_evidence) * context),
+    )
+
+
+def anime_blood_candidate_hit(
+    values: dict[str, float],
+    profile: dict[str, Any],
+    temporal_context: float = 0.0,
+) -> bool:
+    return (
+        values["blood_gore"] >= float(profile["animeBloodCandidateNsflThreshold"])
+        or values["_blood_color"]
+        >= float(profile["animeBloodCandidateColorThreshold"])
+        or values["_violence_static"]
+        >= float(profile["animeBloodCandidateViolenceThreshold"])
+        or temporal_context
+        >= float(profile["animeBloodCandidateTemporalThreshold"])
+    )
+
+
+def load_anime_blood_tag_indices(path: Path) -> tuple[int, tuple[int, ...]]:
+    if not path.is_file():
+        raise WorkerError(f"Required model labels are unavailable: {path.name}")
+    try:
+        with path.open("r", encoding="utf-8-sig", newline="") as stream:
+            rows = list(csv.DictReader(stream))
+    except (OSError, csv.Error) as error:
+        raise WorkerError(f"Could not load anime tag labels: {error}") from error
+    if len(rows) != ANIME_TAG_COUNT or any("tag" not in row for row in rows):
+        raise WorkerError("Anime tag labels have an unexpected schema or count.")
+    positions = {row["tag"]: index for index, row in enumerate(rows)}
+    if "blood" not in positions:
+        raise WorkerError("Anime tag labels do not contain the blood class.")
+    missing = [tag for tag in ANIME_BLOOD_PRIMARY_TAGS if tag not in positions]
+    if missing:
+        raise WorkerError(
+            "Anime tag labels are missing required blood classes: " + ", ".join(missing)
+        )
+    return positions["blood"], tuple(
+        positions[tag] for tag in ANIME_BLOOD_PRIMARY_TAGS
     )
 
 
@@ -535,19 +688,21 @@ class Models:
         root: Path,
         categories: dict[str, bool],
         calibration: dict[str, Any] | None = None,
+        backend: InferenceBackend | None = None,
     ) -> None:
         model_root = root / "models"
+        self.backend = backend or InferenceBackend()
         self.blood_enabled = categories["blood_gore"]
         self.blood_calibration = (
             calibration["bloodGoreFusion"] if self.blood_enabled and calibration else None
         )
         self.safety = (
-            session(model_root / "image-safety-classifier-xs.onnx")
+            session(model_root / "image-safety-classifier-xs.onnx", self.backend)
             if categories["adult_nudity"] or categories["blood_gore"]
             else None
         )
         self.multi = (
-            session(model_root / "image-multi-detect.onnx")
+            session(model_root / "image-multi-detect.onnx", self.backend)
             if (
                 categories["adult_nudity"]
                 or categories["blood_gore"]
@@ -556,8 +711,18 @@ class Models:
             else None
         )
         self.temporal = (
-            session(model_root / "aleris-violence-temporal.onnx")
+            session(model_root / "aleris-violence-temporal.onnx", self.backend)
             if categories["blood_gore"] or categories["violence_weapons"]
+            else None
+        )
+        self.anime = (
+            session(model_root / "anime-blood-tagger.onnx", self.backend)
+            if self.blood_enabled
+            else None
+        )
+        self.anime_tag_indices = (
+            load_anime_blood_tag_indices(model_root / "ml-danbooru-tags.csv")
+            if self.blood_enabled
             else None
         )
 
@@ -611,9 +776,54 @@ class Models:
                     "violence_weapons": float(max(multi[1], multi[2])),
                     "_blood_color": self.blood_color_score(frames[index]),
                     "_violence_static": float(max(multi[1], multi[2])),
+                    "_anime_blood": -1.0 if self.anime is not None else 0.0,
                 }
             )
         return results
+
+    def anime_blood_scores(self, frames: list[np.ndarray]) -> list[float]:
+        if not frames:
+            return []
+        if self.anime is None or self.anime_tag_indices is None:
+            return [0.0] * len(frames)
+        pixels = np.stack(frames).astype(np.float32) / 255.0
+        nchw = pixels.transpose(0, 3, 1, 2)
+        logits = self.anime.run(
+            None, {self.anime.get_inputs()[0].name: nchw}
+        )[0]
+        probabilities = sigmoid(np.asarray(logits, dtype=np.float32))
+        if probabilities.ndim != 2 or probabilities.shape[1] != ANIME_TAG_COUNT:
+            raise WorkerError("Anime tagger returned an unexpected output shape.")
+        blood_index, semantic_indices = self.anime_tag_indices
+        results: list[float] = []
+        for row in probabilities:
+            blood = float(row[blood_index])
+            semantic = max(float(row[index]) for index in semantic_indices)
+            results.append(math.sqrt(max(0.0, blood) * max(0.0, semantic)))
+        return results
+
+    def enrich_anime_blood(
+        self,
+        frames: list[np.ndarray],
+        values: list[dict[str, float]],
+        profile: dict[str, Any],
+        temporal_context: float = 0.0,
+    ) -> None:
+        if self.anime is None:
+            return
+        candidate_indices = [
+            index
+            for index, score in enumerate(values)
+            if score.get("_anime_blood", -1.0) < 0.0
+            and anime_blood_candidate_hit(score, profile, temporal_context)
+        ]
+        if not candidate_indices:
+            return
+        candidates = [frames[index] for index in candidate_indices]
+        for index, score in zip(
+            candidate_indices, self.anime_blood_scores(candidates), strict=True
+        ):
+            values[index]["_anime_blood"] = score
 
     def temporal_score(self, frames: Iterable[np.ndarray]) -> float:
         if self.temporal is None:
@@ -909,7 +1119,7 @@ def exhaustive_scan(
     temporal_frames: deque[np.ndarray] = deque(maxlen=window_size)
     temporal_times: deque[float] = deque(maxlen=window_size)
     temporal_scores: deque[dict[str, float]] = deque(maxlen=window_size)
-    full_rate_scores: deque[tuple[float, dict[str, float]]] = deque()
+    full_rate_scores: deque[tuple[float, np.ndarray, dict[str, float]]] = deque()
     next_temporal_time = 0.0
     temporal_sample_index = 0
     last_temporal_window_sample = -1
@@ -955,14 +1165,16 @@ def exhaustive_scan(
         # every source frame in the same time window. Otherwise a short NSFL hit
         # between two temporal samples can still be lost.
         evidence_frames = [
-            (timestamp, values)
-            for timestamp, values in full_rate_scores
+            (timestamp, frame, values)
+            for timestamp, frame, values in full_rate_scores
             if timestamp + frame_duration >= window_start and timestamp <= window_end
         ]
         if evidence_frames:
-            evidence_scores = [values for _timestamp, values in evidence_frames]
+            evidence_scores = [values for _timestamp, _frame, values in evidence_frames]
         else:
-            evidence_frames = list(zip(temporal_times, scores, strict=True))
+            evidence_frames = list(
+                zip(temporal_times, temporal_frames, scores, strict=True)
+            )
             evidence_scores = scores
         if request.categories["violence_weapons"] and temporal_score >= threshold:
             interval_observations.append(
@@ -974,6 +1186,12 @@ def exhaustive_scan(
                 )
             )
         if request.categories["blood_gore"]:
+            models.enrich_anime_blood(
+                [frame for _timestamp, frame, _values in evidence_frames],
+                evidence_scores,
+                profile,
+                temporal_context=temporal_score,
+            )
             temporal_color = temporal_blood_color_evidence(
                 (value["_blood_color"] for value in evidence_scores),
                 models.blood_calibration,
@@ -982,7 +1200,7 @@ def exhaustive_scan(
             # boundary must stay on the exact source frames that supplied blood
             # evidence. Returning the whole temporal window makes normal frames
             # before/after a blood hit incorrectly inherit the effect.
-            for timestamp, value in evidence_frames:
+            for timestamp, _frame, value in evidence_frames:
                 blood_score = fused_blood_gore_score(
                     {
                         "blood_gore": value["blood_gore"],
@@ -1022,10 +1240,12 @@ def exhaustive_scan(
     def flush_static() -> None:
         nonlocal processed_frames
         scores = models.static_scores(static_frames)
+        if request.categories["blood_gore"]:
+            models.enrich_anime_blood(static_frames, scores, profile)
         for timestamp, frame, values in zip(
             static_times, static_frames, scores, strict=True
         ):
-            full_rate_scores.append((timestamp, values))
+            full_rate_scores.append((timestamp, frame, values))
             retention_start = timestamp - (
                 window_size * temporal_interval + frame_duration
             )
@@ -1145,8 +1365,13 @@ def analyze(line: str) -> None:
     request = parse_request(line)
     root = runtime_root()
     calibration = load_calibration(root)
-    emit_progress(0.02, "loading_models", "Loading local CPU inference sessions")
-    models = Models(root, request.categories, calibration)
+    backend = InferenceBackend()
+    emit_progress(
+        0.02,
+        "loading_models",
+        f"Loading local {backend.display_name} inference sessions",
+    )
+    models = Models(root, request.categories, calibration, backend)
     ffmpeg = resolve_ffmpeg()
     emit_progress(
         0.06,
@@ -1159,7 +1384,7 @@ def analyze(line: str) -> None:
         {
             "type": "result",
             "result": {
-                "provider": "cpu",
+                "provider": backend.active_provider,
                 "segments": segments,
             },
         }
@@ -1178,7 +1403,15 @@ def main() -> int:
         )
         return 2
     if args.health_json:
-        emit({"status": "ready", "schemaVersion": SCHEMA_VERSION})
+        backend = InferenceBackend()
+        emit(
+            {
+                "status": "ready",
+                "schemaVersion": SCHEMA_VERSION,
+                "provider": backend.active_provider,
+                "availableProviders": list(backend.available_providers),
+            }
+        )
         return 0
     line = sys.stdin.readline()
     if not line:

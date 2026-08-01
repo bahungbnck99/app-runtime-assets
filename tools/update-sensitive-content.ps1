@@ -1,7 +1,7 @@
 param(
   [string]$DefinitionPath = "",
   [string]$QualificationReportPath = "",
-  [string]$RuntimeVersion = "1.0.0-candidate.4",
+  [string]$RuntimeVersion = "1.0.0-candidate.5",
   [switch]$ForceDownload,
   [switch]$PublishManifest,
   [string]$Owner = "bahungbnck99",
@@ -42,7 +42,7 @@ $stagingDir = Join-Path $workRoot "staging"
 $distDir = Join-Path $workRoot "dist"
 $buildDir = Join-Path $workRoot "build"
 $smokeDir = Join-Path $workRoot "smoke"
-$venvDir = Join-Path $repoRoot ".work\builder-venv"
+$venvDir = Join-Path $repoRoot ".work\builder-venv-directml"
 $python = Join-Path $venvDir "Scripts\python.exe"
 $packsDir = Join-Path $repoRoot "packs\sensitive-content"
 $archiveName = "sensitive-content-windows-x86_64.zip"
@@ -315,7 +315,7 @@ Bundled runtime dependencies
 
 Python 3.12 runtime: PSF License
 NumPy 2.3.2: BSD-3-Clause
-ONNX Runtime 1.22.1: MIT
+ONNX Runtime DirectML 1.22.0: MIT
 PyInstaller 6.14.2 bootloader: GPL-2.0-or-later with the PyInstaller exception
 
 The production release process must archive the corresponding full license
@@ -346,7 +346,7 @@ $packMetadata = [ordered]@{
   calibrationVersion = [string](Get-Content -LiteralPath $calibrationSource -Raw | ConvertFrom-Json).calibrationVersion
   qualificationStatus = if ($PublishManifest) { "production_qualified" } else { "candidate_only" }
   workerFile = "bin/sensitive-content-worker.exe"
-  provider = "cpu"
+  provider = "directml_cpu"
   offlineInference = $true
   audioDecode = $false
 }

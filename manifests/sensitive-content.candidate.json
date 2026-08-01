@@ -1,16 +1,16 @@
 {
     "schemaVersion":  1,
     "assetType":  "sensitive-content",
-    "runtimeVersion":  "1.0.0-candidate.4",
-    "modelBundleVersion":  "1.0.0",
-    "modelBundleHash":  "6b0acaa70de975ca82c02b0e2ad071567a13c4fad4f978302458009c5c00466e",
-    "calibrationVersion":  "1.0.0-candidate.4",
+    "runtimeVersion":  "1.0.0-candidate.5",
+    "modelBundleVersion":  "1.1.0",
+    "modelBundleHash":  "0cd2b075e692c7d7e099c80d9517dd001c46128ae37b8a2872a233382753861c",
+    "calibrationVersion":  "1.0.0-candidate.5",
     "qualificationStatus":  "candidate_only",
     "os":  "windows",
     "arch":  "x86_64",
     "installMode":  "zip",
-    "packUrl":  "https://github.com/bahungbnck99/app-runtime-assets/releases/download/sensitive-content-1.0.0-candidate.4/sensitive-content-windows-x86_64.zip",
-    "packSha256":  "813e1dcfd5c0402f0209b7458bf296c4fcc3516ba12ff3e8f6018b5c0d71d735",
+    "packUrl":  "https://github.com/bahungbnck99/app-runtime-assets/releases/download/sensitive-content-1.0.0-candidate.5/sensitive-content-windows-x86_64.zip",
+    "packSha256":  "3cdd74f5c346c286b477aa3483686ccc2048d5842184ec253191ff9a69a33dc9",
     "workerFile":  "bin/sensitive-content-worker.exe",
     "files":  [
                   {
@@ -206,7 +206,7 @@
                   {
                       "path":  "bin/_internal/numpy-2.3.2.dist-info/RECORD",
                       "bytes":  110658,
-                      "sha256":  "fd6fafc09572422f241ac57b29446e554b86d574181d97de65135f1bb94afab3"
+                      "sha256":  "d1975c5a498f00a01dcd2fc120fb501000eff45a9958229a19ca2b22f1bc3aee"
                   },
                   {
                       "path":  "bin/_internal/numpy-2.3.2.dist-info/WHEEL",
@@ -214,19 +214,24 @@
                       "sha256":  "e743de01ba6503a3e4234858398a1e69c07d512d51e8482ec9f3a7b1c707d165"
                   },
                   {
+                      "path":  "bin/_internal/onnxruntime/capi/DirectML.dll",
+                      "bytes":  18527816,
+                      "sha256":  "80ce0517a87fc2b75a2dd7ea7ec4d1d3f41f89473e48f0a0cd3ead4493da817e"
+                  },
+                  {
                       "path":  "bin/_internal/onnxruntime/capi/onnxruntime.dll",
-                      "bytes":  14854688,
-                      "sha256":  "c7151fd9844ad7c7d18525f1177e9ef62d91e4a6ac3583d0be700554a2b2b1d6"
+                      "bytes":  20295752,
+                      "sha256":  "f0e5195d6b3c30ed00129a5f78dfd535773e1732b106960e9b823ea16d790935"
                   },
                   {
                       "path":  "bin/_internal/onnxruntime/capi/onnxruntime_providers_shared.dll",
-                      "bytes":  22064,
-                      "sha256":  "747c2ed0ca260a37d43bac97f6c60bda9f42daada3918ec991d9f6c6e0a01746"
+                      "bytes":  21560,
+                      "sha256":  "a9b645f33b1ddcb6d91d35d824e13b49db228a6c86572ab570aafdfa54d33f39"
                   },
                   {
                       "path":  "bin/_internal/onnxruntime/capi/onnxruntime_pybind11_state.pyd",
-                      "bytes":  18104872,
-                      "sha256":  "43b25572ace7c2e8990a2f9ae324cdd0d9f6a99540ba0086298863cc4eaa1b37"
+                      "bytes":  24998432,
+                      "sha256":  "ed50685e46c08f322617c592c6b62916e6b7e4168f6418b5912369475b4906de"
                   },
                   {
                       "path":  "bin/_internal/pyexpat.pyd",
@@ -250,8 +255,8 @@
                   },
                   {
                       "path":  "bin/_internal/pyreadline3-3.5.6.dist-info/RECORD",
-                      "bytes":  7824,
-                      "sha256":  "dcc9834411a07ef21599b5a4b76c1be9a26888ea0ac2aca052c4ba235f82b396"
+                      "bytes":  7916,
+                      "sha256":  "781487961f164baad7ab8beb58c977a35e467e93eecb10e0dba415015072a29b"
                   },
                   {
                       "path":  "bin/_internal/pyreadline3-3.5.6.dist-info/top_level.txt",
@@ -290,23 +295,23 @@
                   },
                   {
                       "path":  "bin/sensitive-content-worker.exe",
-                      "bytes":  4778890,
-                      "sha256":  "297a4486d5aa107a191a512434ad0d83ee0270a0f205d4b2737d339bb5f0f722"
+                      "bytes":  4723922,
+                      "sha256":  "d7b34b8e6a33885d486f1029fc3045db41debedaeb1bca86843f674288c9e4f5"
                   },
                   {
                       "path":  "config/calibration.json",
-                      "bytes":  2865,
-                      "sha256":  "418e1e12ff8aca1df261048f5464d3ec0c81fbc7a602470d4af3355f1b49a4b4"
+                      "bytes":  3772,
+                      "sha256":  "dc632728378a26a9ce063b7cca7274b715c89d56f695984bd78c254cf7ada34b"
                   },
                   {
                       "path":  "licenses/DATA-PROVENANCE.txt",
-                      "bytes":  912,
-                      "sha256":  "8b94b1187f31e592d08d97d5e43429afa5b3327623610593b696c4bbf72aa5dd"
+                      "bytes":  955,
+                      "sha256":  "d1bea4e736e6cfe5556b9dc43c2a1bc2dc590837916b6232586fdde0c60292eb"
                   },
                   {
                       "path":  "licenses/IMAGE-MODEL-LICENSE.txt",
-                      "bytes":  702,
-                      "sha256":  "244f827836b4dee66108b99414d779012059ee65b5f29be294db5cdda87d8758"
+                      "bytes":  940,
+                      "sha256":  "91505fa6e6af2fb9617e37534c8dd872dc8a7e247e04b4f4330578078801b2a8"
                   },
                   {
                       "path":  "licenses/RUNTIME-LICENSE.txt",
@@ -320,23 +325,28 @@
                   },
                   {
                       "path":  "licenses/THIRD-PARTY-NOTICES.txt",
-                      "bytes":  419,
-                      "sha256":  "16df87f56dc4452aab0dd7f9a2dfe2fa1fa69ab13cf3325fcd98a346f9feb80d"
+                      "bytes":  428,
+                      "sha256":  "a5d4d8fb274811e76db3a0bfcfffb99a569c6ba1b614e1fac04fcaaf9153452f"
                   },
                   {
                       "path":  "metadata/model-sources.json",
-                      "bytes":  3753,
-                      "sha256":  "510124ccf94c34af47e08f7113c34968475dbb35b2961f0a508f6fdf54e7be12"
+                      "bytes":  5477,
+                      "sha256":  "8c404f3903159eb1e2894039229d28837a1136426bda14a93f31e18468c1b40e"
                   },
                   {
                       "path":  "metadata/qualification.json",
-                      "bytes":  1870,
-                      "sha256":  "e9fb3d49e8aeea6b71c20c77860d05d5629332c5bba735aef3d8ed6eb5d56bd6"
+                      "bytes":  1902,
+                      "sha256":  "4047d219a2573f31323fb8e4a231957bfc0052cfa034ace44ba9b29578ac4324"
                   },
                   {
                       "path":  "models/aleris-violence-temporal.onnx",
                       "bytes":  69756296,
                       "sha256":  "dff225ca8db8458a19fed216ee6f8e86b61cf051d5ae60e6f44056754d7a7243"
+                  },
+                  {
+                      "path":  "models/anime-blood-tagger.onnx",
+                      "bytes":  235546500,
+                      "sha256":  "594c26e2cb72637c343f0492ba9d76b642e751201bcf61ff43f02ddeab3abcb9"
                   },
                   {
                       "path":  "models/image-multi-detect.onnx",
@@ -349,9 +359,14 @@
                       "sha256":  "8c28c49d9075f3ad15ebdc2961f02d5b3f99be944815b848b49c9f0e6f3fb689"
                   },
                   {
+                      "path":  "models/ml-danbooru-tags.csv",
+                      "bytes":  368541,
+                      "sha256":  "59e337ca4cef6bf9571ea65e4281f3798433ba8c00a3ab8f660c7d8f4f5e57a2"
+                  },
+                  {
                       "path":  "pack.json",
-                      "bytes":  482,
-                      "sha256":  "741ac27fcf5be767109cdaf7f5793aec1bb6351c8267c627f81b4e547967081b"
+                      "bytes":  491,
+                      "sha256":  "2e0c951924f00ede995e2270b7f9ca1d74dace8c9b31239587855db3c0e222b1"
                   }
               ],
     "licenses":  [

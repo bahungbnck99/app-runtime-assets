@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "calibrationVersion": "1.0.0-candidate.4",
+  "calibrationVersion": "1.0.0-candidate.5",
   "qualificationStatus": "candidate_only",
   "imageSize": 224,
   "coarseFps": 1.0,
@@ -23,7 +23,12 @@
       "bloodCandidateViolenceThreshold": 0.4,
       "bloodColorCandidateThreshold": 0.45,
       "bloodContextThreshold": 0.45,
-      "bloodNsflAssistScale": 0.45
+      "bloodNsflAssistScale": 0.45,
+      "animeBloodCandidateNsflThreshold": 0.015,
+      "animeBloodCandidateColorThreshold": 0.04,
+      "animeBloodCandidateViolenceThreshold": 0.08,
+      "animeBloodCandidateTemporalThreshold": 0.35,
+      "animeBloodTriggerThreshold": 0.68
     },
     "balanced": {
       "candidateThreshold": 0.35,
@@ -33,7 +38,12 @@
       "bloodCandidateViolenceThreshold": 0.6,
       "bloodColorCandidateThreshold": 0.6,
       "bloodContextThreshold": 0.6,
-      "bloodNsflAssistScale": 0.45
+      "bloodNsflAssistScale": 0.45,
+      "animeBloodCandidateNsflThreshold": 0.02,
+      "animeBloodCandidateColorThreshold": 0.08,
+      "animeBloodCandidateViolenceThreshold": 0.12,
+      "animeBloodCandidateTemporalThreshold": 0.45,
+      "animeBloodTriggerThreshold": 0.8
     },
     "low_false_positive": {
       "candidateThreshold": 0.5,
@@ -43,7 +53,12 @@
       "bloodCandidateViolenceThreshold": 0.75,
       "bloodColorCandidateThreshold": 0.75,
       "bloodContextThreshold": 0.72,
-      "bloodNsflAssistScale": 0.45
+      "bloodNsflAssistScale": 0.45,
+      "animeBloodCandidateNsflThreshold": 0.04,
+      "animeBloodCandidateColorThreshold": 0.14,
+      "animeBloodCandidateViolenceThreshold": 0.2,
+      "animeBloodCandidateTemporalThreshold": 0.6,
+      "animeBloodTriggerThreshold": 0.9
     }
   },
   "bloodGoreFusion": {
@@ -77,7 +92,9 @@
       {"model": "image-multi-detect", "label": "violence", "weight": 1.0},
       {"model": "image-multi-detect", "label": "weapon", "weight": 1.0},
       {"model": "aleris-violence-temporal", "label": "violent", "weight": 1.0},
-      {"model": "blood-color-evidence", "label": "localized_dark_red", "weight": 1.0}
+      {"model": "blood-color-evidence", "label": "localized_dark_red", "weight": 1.0},
+      {"model": "ml-danbooru-anime-tagger", "label": "blood", "weight": 1.0},
+      {"model": "ml-danbooru-anime-tagger", "label": "blood_location_and_injury_tags", "weight": 1.0}
     ],
     "violence_weapons": [
       {"model": "image-multi-detect", "label": "violence", "weight": 1.0},

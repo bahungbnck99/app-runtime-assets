@@ -1,3 +1,3 @@
 6bda239a899da197ed1258bbd96c32aa8eeabeac14c119e29258b5884e9b5b2e  packs/fonts/fonts-pack-2026.06.26.zip
 b6cadc53c63b19b73b8b43b3da053ddaab0757f5f768c0016e87807915cf4380  packs/ffmpeg/ffmpeg-windows-x64-8.1-r1.zip
-813e1dcfd5c0402f0209b7458bf296c4fcc3516ba12ff3e8f6018b5c0d71d735  packs/sensitive-content/sensitive-content-windows-x86_64.zip
+3cdd74f5c346c286b477aa3483686ccc2048d5842184ec253191ff9a69a33dc9  packs/sensitive-content/sensitive-content-windows-x86_64.zip

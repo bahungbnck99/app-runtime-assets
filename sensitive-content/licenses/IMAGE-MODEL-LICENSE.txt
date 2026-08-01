@@ -11,6 +11,12 @@ Candidate image model declarations
    Declared model license: MIT
    Source: https://huggingface.co/abhi099k/image-multi-detect
 
+3. deepghs/ml-danbooru-onnx
+   Revision: eb9058324a741f1b90d4db168f6e1d6b6cb7e63d
+   Files: TResnet-D-FLq_ema_6-30000.onnx and tags.csv
+   Declared model-repository license: MIT
+   Source: https://huggingface.co/deepghs/ml-danbooru-onnx
+
 These are candidate checkpoints. The declared weight licenses do not by
 themselves establish sufficient rights in the underlying training data.
 Consequently they are not approved for a production release by this
